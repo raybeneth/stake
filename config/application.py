@@ -1,10 +1,10 @@
 config = {
     "db": {
-        "host": "kango-mysql.site",
+        "host": "103.178.57.34",
         "port": 3306,
         "username": "root",
-        "password": "KangoShyVpn500",
-        "database": "chatdb",
+        "password": "kango-mysql@zxc",
+        "database": "anti_red",
         "params": {}
     },
     "redis": {
