@@ -1,16 +1,12 @@
-# 第一阶段：构建环境
-FROM python:3.12-slim as builder
+FROM registry.cn-hangzhou.aliyuncs.com/sudoom/python:3.12.2
 
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /usr/src/app
+ENV PROFILE test
 
-# 第二阶段：运行环境
-FROM python:3.9-slim
+COPY requirements.txt ./
+RUN pip install --cache-dir=./cache -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com -r requirements.txt
+ENV PYTHONPATH /usr/src/app
 
-WORKDIR /app
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY . .
 
-EXPOSE 8080
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "app.server:app", "--host", "0.0.0.0"]
