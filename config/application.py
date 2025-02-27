@@ -1,4 +1,5 @@
 config = {
+    "aes-secret": "7f9b2e4d8c6a1d3e",
     "db": {
         "host": "103.178.57.34",
         "port": 3306,
