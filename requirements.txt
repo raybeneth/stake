@@ -8,5 +8,7 @@ mysqlclient
 crypto~=1.4.1
 sql_metadata~=2.10.0
 schedule
-coloredlogs
-cryptography
+coloredlogs~=15.0.1
+cryptography~=42.0.5
+requests~=2.32.3
+eth-account~=0.13.7
