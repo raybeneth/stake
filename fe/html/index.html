@@ -13,6 +13,7 @@
             box-sizing: border-box;
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         }
+
         :root {
             --primary: #bcff2f;
             --bg-dark: #000000;
@@ -24,6 +25,7 @@
             --success: #bcff2f;
             --error: #ff3a57;
         }
+
         body {
             background: var(--bg-dark);
             color: var(--text-main);
@@ -32,6 +34,7 @@
             overflow-x: hidden;
             position: relative;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -51,12 +54,14 @@
             top: 0;
             z-index: 100;
         }
+
         .logo-container {
             display: flex;
             align-items: center;
             gap: 12px;
             flex: 1;
         }
+
         .logo {
             width: 36px;
             height: 36px;
@@ -69,17 +74,20 @@
             font-weight: 800;
             font-size: 18px;
         }
+
         .logo-text {
             font-size: 20px;
             font-weight: 700;
             color: var(--text-main);
         }
+
         .nav-links {
             display: flex;
             gap: 32px;
             flex: 1;
             justify-content: center;
         }
+
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -89,9 +97,11 @@
             padding: 8px 0;
             position: relative;
         }
+
         .nav-links a:hover, .nav-links a.active {
             color: var(--primary);
         }
+
         .nav-links a.active::after {
             content: '';
             position: absolute;
@@ -102,6 +112,7 @@
             background: var(--primary);
             border-radius: 2px;
         }
+
         .wallet-section {
             display: flex;
             align-items: center;
@@ -109,6 +120,7 @@
             flex: 1;
             justify-content: flex-end;
         }
+
         .connect-btn {
             background: var(--primary);
             color: var(--bg-dark);
@@ -124,10 +136,12 @@
             gap: 8px;
             white-space: nowrap;
         }
+
         .connect-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(188, 255, 47, 0.3);
         }
+
         .wallet-info {
             display: flex;
             align-items: center;
@@ -150,6 +164,7 @@
             margin: 60px 0;
             align-items: center;
         }
+
         .slogan-container {
             flex: 1;
             padding: 40px;
@@ -157,6 +172,7 @@
             border-radius: 20px;
             border: 1px solid var(--border);
         }
+
         .slogan {
             font-size: 40px;
             font-weight: 800;
@@ -166,17 +182,20 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .slogan-subtext {
             font-size: 18px;
             color: var(--text-secondary);
             line-height: 1.6;
         }
+
         .slogan-features {
             margin-top: 30px;
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
         }
+
         .feature-tag {
             background: rgba(188, 255, 47, 0.1);
             color: var(--primary);
@@ -194,6 +213,7 @@
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         }
+
         .promo-video {
             width: 100%;
             height: auto;
@@ -222,6 +242,7 @@
             margin: 0 auto 40px;
             border: 1px solid var(--border);
         }
+
         .tab-btn {
             padding: 15px 30px;
             border-radius: 8px;
@@ -234,10 +255,12 @@
             transition: all 0.3s ease;
             flex: 1;
         }
+
         .tab-btn.active {
             background: rgba(188, 255, 47, 0.1);
             color: var(--primary);
         }
+
         /* 内容卡片 */
         .content-card {
             background: var(--bg-card);
@@ -248,6 +271,7 @@
             margin: 0 auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
         .card-title {
             font-size: 26px;
             font-weight: 700;
@@ -256,9 +280,11 @@
             align-items: center;
             gap: 12px;
         }
+
         .card-title i {
             color: var(--primary);
         }
+
         .apy-badge {
             background: rgba(188, 255, 47, 0.1);
             color: var(--primary);
@@ -271,10 +297,12 @@
             align-items: center;
             gap: 8px;
         }
+
         /* 输入组 */
         .input-group {
             margin-bottom: 25px;
         }
+
         .input-label {
             display: flex;
             justify-content: space-between;
@@ -282,10 +310,12 @@
             font-size: 16px;
             color: var(--text-secondary);
         }
+
         .balance {
             color: var(--primary);
             font-weight: 500;
         }
+
         .input-container {
             position: relative;
             border-radius: 14px;
@@ -293,6 +323,7 @@
             background: var(--bg-input);
             border: 1px solid var(--border);
         }
+
         .token-input {
             width: 100%;
             background: transparent;
@@ -303,9 +334,11 @@
             outline: none;
             padding-right: 120px;
         }
+
         .token-input:focus {
             background: rgba(13, 13, 13, 0.8);
         }
+
         .input-actions {
             position: absolute;
             right: 15px;
@@ -314,6 +347,7 @@
             display: flex;
             gap: 10px;
         }
+
         .max-btn {
             background: rgba(188, 255, 47, 0.1);
             color: var(--primary);
@@ -325,9 +359,11 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .max-btn:hover {
             background: rgba(188, 255, 47, 0.2);
         }
+
         /* 操作按钮 */
         .action-btn {
             width: 100%;
@@ -346,10 +382,12 @@
             justify-content: center;
             gap: 12px;
         }
+
         .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(188, 255, 47, 0.3);
         }
+
         .action-btn:disabled {
             background: #495266;
             cursor: not-allowed;
@@ -357,6 +395,7 @@
             transform: none;
             color: var(--text-secondary);
         }
+
         /* 收益计算器 */
         .calculator {
             background: rgba(26, 26, 26, 0.5);
@@ -365,6 +404,7 @@
             border: 1px solid var(--border);
             margin-top: 30px;
         }
+
         .time-slider {
             width: 100%;
             margin: 25px 0;
@@ -374,6 +414,7 @@
             background: rgba(255, 255, 255, 0.1);
             outline: none;
         }
+
         .time-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 22px;
@@ -383,6 +424,7 @@
             cursor: pointer;
             box-shadow: 0 0 12px rgba(188, 255, 47, 0.5);
         }
+
         .time-labels {
             display: flex;
             justify-content: space-between;
@@ -390,6 +432,7 @@
             font-size: 14px;
             margin-top: 8px;
         }
+
         .reward-display {
             background: rgba(188, 255, 47, 0.05);
             border-radius: 16px;
@@ -398,12 +441,14 @@
             text-align: center;
             border: 1px dashed rgba(188, 255, 47, 0.2);
         }
+
         .reward-value {
             font-size: 32px;
             font-weight: 800;
             color: var(--primary);
             margin: 20px 0;
         }
+
         .reward-subtext {
             color: var(--text-secondary);
             font-size: 16px;
@@ -414,11 +459,13 @@
             max-width: 900px;
             margin: 80px auto 60px;
         }
+
         .faq-container {
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
+
         .faq-item {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -426,11 +473,13 @@
             padding: 30px;
             transition: all 0.3s ease;
         }
+
         .faq-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border-color: rgba(188, 255, 47, 0.3);
         }
+
         .faq-question {
             font-size: 22px;
             font-weight: 600;
@@ -440,9 +489,11 @@
             align-items: center;
             gap: 15px;
         }
+
         .faq-question i {
             font-size: 24px;
         }
+
         .faq-answer {
             color: var(--text-secondary);
             line-height: 1.7;
@@ -457,6 +508,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+
         .mobile-slogan-container {
             display: none;
             background: rgba(26, 26, 26, 0.6);
@@ -474,102 +526,130 @@
                 gap: 30px;
                 margin: 40px 0;
             }
+
             .slogan-container {
                 width: 100%;
             }
+
             .video-container {
                 width: 100%;
                 max-width: 800px;
             }
         }
+
         @media (max-width: 768px) {
             .navbar {
                 padding: 12px 15px;
             }
+
             .logo-text {
                 font-size: 18px;
             }
+
             .nav-links {
                 display: none;
             }
+
             .top-banner {
                 display: none;
             }
+
             .mobile-video-container {
                 display: block;
             }
+
             .mobile-slogan-container {
                 display: block;
             }
+
             .section-title {
                 font-size: 28px;
                 margin: 40px 0 20px;
             }
+
             .tabs {
                 max-width: 100%;
             }
+
             .tab-btn {
                 padding: 12px 15px;
                 font-size: 16px;
             }
+
             .content-card {
                 padding: 25px;
                 max-width: 100%;
             }
+
             .card-title {
                 font-size: 22px;
             }
+
             .wallet-info {
                 max-width: 120px;
                 font-size: 12px;
             }
+
             .slogan {
                 font-size: 28px;
             }
+
             .slogan-subtext {
                 font-size: 18px;
             }
+
             .faq-section {
                 margin: 50px auto 30px;
             }
+
             .faq-item {
                 padding: 20px;
             }
+
             .faq-question {
                 font-size: 20px;
             }
         }
+
         @media (max-width: 480px) {
             .connect-btn {
                 padding: 8px 15px;
                 font-size: 13px;
             }
+
             .wallet-info {
                 padding: 6px 12px;
                 font-size: 12px;
                 max-width: 100px;
             }
+
             .action-btn {
                 padding: 16px;
                 font-size: 16px;
             }
+
             .slogan {
                 font-size: 24px;
             }
+
             .section-title {
                 font-size: 24px;
             }
+
             .faq-question {
                 font-size: 18px;
             }
         }
+
         /* 标签页内容 */
         .tab-content {
             display: none;
         }
+
         .tab-content.active {
             display: block;
         }
+
         /* 状态信息 */
         .status-info {
             background: rgba(188, 255, 47, 0.05);
@@ -578,24 +658,30 @@
             margin-bottom: 25px;
             border: 1px solid rgba(188, 255, 47, 0.1);
         }
+
         .status-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 12px;
             font-size: 16px;
         }
+
         .status-item:last-child {
             margin-bottom: 0;
         }
+
         .status-label {
             color: var(--text-secondary);
         }
+
         .status-value {
             font-weight: 600;
         }
+
         .status-value.primary {
             color: var(--primary);
         }
+
         /* 次要按钮样式 */
         .secondary-btn {
             background: transparent;
@@ -609,6 +695,7 @@
             flex: 1;
             font-size: 16px;
         }
+
         .secondary-btn.active {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--primary);
@@ -617,377 +704,702 @@
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <div class="logo">ES</div>
-            <div class="logo-text">Easy(ETH) Staking</div>
+<!-- 导航栏 -->
+<nav class="navbar">
+    <div class="logo-container">
+        <div class="logo">ES</div>
+        <div class="logo-text">Easy(ETH) Staking</div>
+    </div>
+    <div class="nav-links">
+        <a href="#" class="active">HOME</a>
+    </div>
+    <div class="wallet-section">
+        <button class="connect-btn" id="connectWalletBtn">
+            <i class="fas fa-wallet"></i> Content Wallet
+        </button>
+        <div class="wallet-info" id="walletInfo" style="display: none;">
+            <i class="fas fa-wallet"></i>
+            <span id="walletAddress">0x742d...C3B9</span>
         </div>
-        <div class="nav-links">
-            <a href="#" class="active">HOME</a>
-        </div>
-        <div class="wallet-section">
-            <button class="connect-btn" id="connectWalletBtn">
-                <i class="fas fa-wallet"></i> Content Wallet
-            </button>
-            <div class="wallet-info" id="walletInfo" style="display: none;">
-                <i class="fas fa-wallet"></i>
-                <span id="walletAddress">0x742d...C3B9</span>
-            </div>
-        </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="container">
-        <!-- PC端顶部横幅 -->
-        <div class="top-banner">
-            <div class="slogan-container">
-                <div class="slogan">A safe and efficient token staking solution</div>
-                <div class="slogan-subtext">
-                    Our platform offers an industry-leading annualized rate of return of 5%, ensuring the security of funds through blockchain technology and achieving stable asset appreciation.
-                    Zero transaction fees, real-time returns, and flexible access provide the best value-added solution for your digital assets.
-                </div>
-                <div class="slogan-features">
-                    <div class="feature-tag">5% annualized return</div>
-                    <div class="feature-tag">Zero handling fee</div>
-                    <div class="feature-tag">Real-time revenue</div>
-                    <div class="feature-tag">Safe and reliable</div>
-                    <div class="feature-tag">Flexible access</div>
-                </div>
+<div class="container">
+    <!-- PC端顶部横幅 -->
+    <div class="top-banner">
+        <div class="slogan-container">
+            <div class="slogan">A safe and efficient token staking solution</div>
+            <div class="slogan-subtext">
+                Our platform offers an industry-leading annualized rate of return of 5%, ensuring the security of funds
+                through blockchain technology and achieving stable asset appreciation.
+                Zero transaction fees, real-time returns, and flexible access provide the best value-added solution for
+                your digital assets.
             </div>
-
-            <div class="video-container">
-                <video class="promo-video" autoplay loop muted playsinline>
-                    <source src="https://web3.okx.com/cdn/assets/files/241/57C1258631DC562B.mp4" type="video/mp4">
-                </video>
+            <div class="slogan-features">
+                <div class="feature-tag">5% annualized return</div>
+                <div class="feature-tag">Zero handling fee</div>
+                <div class="feature-tag">Real-time revenue</div>
+                <div class="feature-tag">Safe and reliable</div>
+                <div class="feature-tag">Flexible access</div>
             </div>
         </div>
 
-        <!-- 移动端视频 -->
-        <div class="mobile-video-container">
+        <div class="video-container">
             <video class="promo-video" autoplay loop muted playsinline>
                 <source src="https://web3.okx.com/cdn/assets/files/241/57C1258631DC562B.mp4" type="video/mp4">
             </video>
         </div>
+    </div>
 
-        <!-- 移动端宣传语 -->
-        <div class="mobile-slogan-container">
-            <div class="slogan">A safe and efficient token staking solution</div>
-            <div class="slogan-subtext" style="margin-top: 15px;">
-                5% annualized return · Zero transaction fees · Real-time returns · Safe and reliable · Flexible access
+    <!-- 移动端视频 -->
+    <div class="mobile-video-container">
+        <video class="promo-video" autoplay loop muted playsinline>
+            <source src="https://web3.okx.com/cdn/assets/files/241/57C1258631DC562B.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- 移动端宣传语 -->
+    <div class="mobile-slogan-container">
+        <div class="slogan">A safe and efficient token staking solution</div>
+        <div class="slogan-subtext" style="margin-top: 15px;">
+            5% annualized return · Zero transaction fees · Real-time returns · Safe and reliable · Flexible access
+        </div>
+    </div>
+
+    <!-- 功能区域标题 -->
+    <h2 class="section-title">Token staking service</h2>
+
+    <!-- 标签页导航 -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="stake">Easy Staking</button>
+        <button class="tab-btn" data-tab="withdraw">Withdrawal</button>
+        <button class="tab-btn" data-tab="calculator">Revenue calculation</button>
+    </div>
+
+    <!-- 质押卡片 -->
+    <div class="tab-content active" id="stakeTab">
+        <div class="content-card">
+            <h2 class="card-title">
+                <i class="fas fa-lock"></i>
+                Staking tokens
+            </h2>
+            <div class="apy-badge">
+                <i class="fas fa-percentage"></i> Annualized rate of return: 5%
             </div>
-        </div>
-
-        <!-- 功能区域标题 -->
-        <h2 class="section-title">Token staking service</h2>
-
-        <!-- 标签页导航 -->
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="stake">Easy Staking</button>
-            <button class="tab-btn" data-tab="withdraw">Withdrawal</button>
-            <button class="tab-btn" data-tab="calculator">Revenue calculation</button>
-        </div>
-
-        <!-- 质押卡片 -->
-        <div class="tab-content active" id="stakeTab">
-            <div class="content-card">
-                <h2 class="card-title">
-                    <i class="fas fa-lock"></i>
-                    Staking tokens
-                </h2>
-                <div class="apy-badge">
-                    <i class="fas fa-percentage"></i> Annualized rate of return: 5%
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Quantity of pledge</span>
+                    <span>Balance: <span class="balance">1,250.75 ETH</span></span>
                 </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <span>Quantity of pledge</span>
-                        <span>Balance: <span class="balance">1,250.75 ETH</span></span>
+                <div class="input-container">
+                    <input type="number" class="token-input" id="stakeAmount" placeholder="0.0" min="0" step="0.01">
+                    <div class="input-actions">
+                        <button class="max-btn">MAX</button>
+                        <span style="color: var(--text-secondary); font-weight: 500;padding-top: 5px;">ETH</span>
                     </div>
-                    <div class="input-container">
-                        <input type="number" class="token-input" id="stakeAmount" placeholder="0.0" min="0" step="0.01">
-                        <div class="input-actions">
-                            <button class="max-btn">MAX</button>
-                            <span style="color: var(--text-secondary); font-weight: 500;padding-top: 5px;">ETH</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="action-btn" id="stakeBtn" disabled>
-                    <i class="fas fa-lock"></i> STAKING
-                </button>
-            </div>
-        </div>
-
-        <!-- 提款卡片 -->
-        <div class="tab-content" id="withdrawTab">
-            <div class="content-card">
-                <h2 class="card-title">
-                    <i class="fas fa-coins"></i>
-                    Withdraw funds
-                </h2>
-                <div class="status-info">
-                    <div class="status-item">
-                        <span class="status-label">Total amount of pledge</span>
-                        <span class="status-value">850.25 ETH</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Earnings to be withdrawn</span>
-                        <span class="status-value primary">12.63 ETH</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">The pledge can be withdrawn</span>
-                        <span class="status-value">500.00 ETH</span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <span>Extraction quantity</span>
-                        <span>Extractable: <span class="balance">512.63 ETH</span></span>
-                    </div>
-                    <div class="input-container">
-                        <input type="number" class="token-input" id="withdrawAmount" placeholder="0.0" min="0" step="0.01">
-                        <div class="input-actions">
-                            <button class="max-btn">MAX</button>
-                            <span style="color: var(--text-secondary); font-weight: 500;padding-top: 5px;">ETH</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <span>Extraction type</span>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="secondary-btn" id="withdrawRewardsBtn">Revenue</button>
-                        <button class="secondary-btn active" id="withdrawStakeBtn">Principal</button>
-                    </div>
-                </div>
-                <button class="action-btn">
-                    <i class="fas fa-download"></i> Confirm extraction
-                </button>
-            </div>
-        </div>
-
-        <!-- 计算器卡片 -->
-        <div class="tab-content" id="calculatorTab">
-            <div class="content-card">
-                <h2 class="card-title">
-                    <i class="fas fa-calculator"></i>
-                    Revenue calculator
-                </h2>
-                <div class="apy-badge">
-                    <i class="fas fa-chart-line"></i> Annualized rate of return: 5%
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <span>Pledged amount (ETH)</span>
-                    </div>
-                    <div class="input-container">
-                        <input type="number" class="token-input" id="calcAmount" value="100" min="0" step="1">
-                    </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <span>Duration of pledge: <span id="durationValue">90</span> DAYS</span>
-                    </div>
-                    <input type="range" min="7" max="365" value="90" class="time-slider" id="durationSlider">
-                    <div class="time-labels">
-                        <span>7 DAYS</span>
-                        <span>180 DAYS</span>
-                        <span>365 DAYS</span>
-                    </div>
-                </div>
-                <div class="reward-display">
-                    <div class="reward-subtext">Overdue income</div>
-                    <div class="reward-value" id="rewardValue">3.00 ETH</div>
-                    <div class="reward-subtext">Calculated based on an annualized rate of return of 5%</div>
                 </div>
             </div>
+            <button class="action-btn" id="stakeBtn" disabled>
+                <i class="fas fa-lock"></i> STAKING
+            </button>
         </div>
+    </div>
 
-        <!-- 常见问题部分 -->
-        <div class="faq-section">
-            <h2 class="section-title">FAQ</h2>
-            <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        How long does it take to pledge?
-                    </div>
-                    <div class="faq-answer">
-                        The staking operation usually takes effect immediately after confirmation on the blockchain and generally takes 1 to 5 minutes, depending on the current network conditions. Your assets will immediately start generating returns.
+    <!-- 提款卡片 -->
+    <div class="tab-content" id="withdrawTab">
+        <div class="content-card">
+            <h2 class="card-title">
+                <i class="fas fa-coins"></i>
+                Withdraw funds
+            </h2>
+            <div class="status-info">
+                <div class="status-item">
+                    <span class="status-label">Total amount of pledge</span>
+                    <span class="status-value">850.25 ETH</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Earnings to be withdrawn</span>
+                    <span class="status-value primary">12.63 ETH</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">The pledge can be withdrawn</span>
+                    <span class="status-value">500.00 ETH</span>
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Extraction quantity</span>
+                    <span>Extractable: <span class="balance">512.63 ETH</span></span>
+                </div>
+                <div class="input-container">
+                    <input type="number" class="token-input" id="withdrawAmount" placeholder="0.0" min="0" step="0.01">
+                    <div class="input-actions">
+                        <button class="max-btn">MAX</button>
+                        <span style="color: var(--text-secondary); font-weight: 500;padding-top: 5px;">ETH</span>
                     </div>
                 </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        How are the earnings calculated and distributed?
-                    </div>
-                    <div class="faq-answer">
-                        Earnings are calculated on a daily basis and updated once an hour. The annualized rate of return is 5%, calculated based on the actual number of days of pledge. You can withdraw the earnings at any time or re-stake them to obtain compound interest.
-                    </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Extraction type</span>
                 </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        How long does it take to withdraw the funds?
-                    </div>
-                    <div class="faq-answer">
-                        Extraction requests are usually processed within 24 hours after submission. The time it takes for funds to arrive depends on the confirmation speed of the blockchain network, generally ranging from 10 minutes to 2 hours.
-                    </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="secondary-btn" id="withdrawRewardsBtn">Revenue</button>
+                    <button class="secondary-btn active" id="withdrawStakeBtn">Principal</button>
                 </div>
+            </div>
+            <button class="action-btn">
+                <i class="fas fa-download"></i> Confirm extraction
+            </button>
+        </div>
+    </div>
 
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        Is there a minimum pledge amount?
-                    </div>
-                    <div class="faq-answer">
-                        There is no minimum staking amount limit on our platform. You can stake any number of tokens. Regardless of the amount, everyone enjoys the same annualized rate of return of 5%.
-                    </div>
+    <!-- 计算器卡片 -->
+    <div class="tab-content" id="calculatorTab">
+        <div class="content-card">
+            <h2 class="card-title">
+                <i class="fas fa-calculator"></i>
+                Revenue calculator
+            </h2>
+            <div class="apy-badge">
+                <i class="fas fa-chart-line"></i> Annualized rate of return: 5%
+            </div>
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Pledged amount (ETH)</span>
                 </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        Does the platform charge a handling fee?
-                    </div>
-                    <div class="faq-answer">
-                        No platform handling fees are charged for both staking and income withdrawal. You only need to pay the blockchain network transaction Fee (Gas Fee), which is determined by the network condition.
-                    </div>
+                <div class="input-container">
+                    <input type="number" class="token-input" id="calcAmount" value="100" min="0" step="1">
                 </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <i class="fas fa-question-circle"></i>
-                        How to ensure the safety of funds?
-                    </div>
-                    <div class="faq-answer">
-                        We use multi-signature cold wallets to store user assets. All smart contracts have been audited by three professional security companies and are subject to 7× 24-hour security monitoring to ensure the safety of your funds.
-                    </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">
+                    <span>Duration of pledge: <span id="durationValue">90</span> DAYS</span>
                 </div>
+                <input type="range" min="7" max="365" value="90" class="time-slider" id="durationSlider">
+                <div class="time-labels">
+                    <span>7 DAYS</span>
+                    <span>180 DAYS</span>
+                    <span>365 DAYS</span>
+                </div>
+            </div>
+            <div class="reward-display">
+                <div class="reward-subtext">Overdue income</div>
+                <div class="reward-value" id="rewardValue">3.00 ETH</div>
+                <div class="reward-subtext">Calculated based on an annualized rate of return of 5%</div>
             </div>
         </div>
     </div>
 
-    <script>
-        // 页面交互逻辑
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM元素
-            const connectBtn = document.getElementById('connectWalletBtn');
-            const walletInfo = document.getElementById('walletInfo');
-            const stakeBtn = document.getElementById('stakeBtn');
-            const stakeAmount = document.getElementById('stakeAmount');
-            const calcAmount = document.getElementById('calcAmount');
-            const durationSlider = document.getElementById('durationSlider');
-            const durationValue = document.getElementById('durationValue');
-            const rewardValue = document.getElementById('rewardValue');
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const withdrawRewardsBtn = document.getElementById('withdrawRewardsBtn');
-            const withdrawStakeBtn = document.getElementById('withdrawStakeBtn');
-            const secondaryBtns = document.querySelectorAll('.secondary-btn');
-            const videos = document.querySelectorAll('.promo-video');
+    <!-- 常见问题部分 -->
+    <div class="faq-section">
+        <h2 class="section-title">FAQ</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    How long does it take to pledge?
+                </div>
+                <div class="faq-answer">
+                    The staking operation usually takes effect immediately after confirmation on the blockchain and
+                    generally takes 1 to 5 minutes, depending on the current network conditions. Your assets will
+                    immediately start generating returns.
+                </div>
+            </div>
 
-            // 标签页切换
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // 移除所有活动状态
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    // 添加当前活动状态
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab') + 'Tab';
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    How are the earnings calculated and distributed?
+                </div>
+                <div class="faq-answer">
+                    Earnings are calculated on a daily basis and updated once an hour. The annualized rate of return is
+                    5%, calculated based on the actual number of days of pledge. You can withdraw the earnings at any
+                    time or re-stake them to obtain compound interest.
+                </div>
+            </div>
 
-            // 模拟钱包连接
-            connectBtn.addEventListener('click', () => {
-                connectBtn.style.display = 'none';
-                walletInfo.style.display = 'flex';
-            });
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    How long does it take to withdraw the funds?
+                </div>
+                <div class="faq-answer">
+                    Extraction requests are usually processed within 24 hours after submission. The time it takes for
+                    funds to arrive depends on the confirmation speed of the blockchain network, generally ranging from
+                    10 minutes to 2 hours.
+                </div>
+            </div>
 
-            // 质押按钮状态管理
-            stakeAmount.addEventListener('input', () => {
-                stakeBtn.disabled = stakeAmount.value <= 0;
-            });
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    Is there a minimum pledge amount?
+                </div>
+                <div class="faq-answer">
+                    There is no minimum staking amount limit on our platform. You can stake any number of tokens.
+                    Regardless of the amount, everyone enjoys the same annualized rate of return of 5%.
+                </div>
+            </div>
 
-            // 质押按钮点击事件
-            stakeBtn.addEventListener('click', () => {
-                const amount = stakeAmount.value;
-                if(amount > 0) {
-                    // 模拟交易成功
-                    stakeAmount.value = '';
-                    stakeBtn.disabled = true;
-                    // 显示成功状态
-                    stakeBtn.innerHTML = '<i class="fas fa-check"></i> 质押成功';
-                    setTimeout(() => {
-                        stakeBtn.innerHTML = '<i class="fas fa-lock"></i> 质押代币';
-                    }, 3000);
-                }
-            });
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    Does the platform charge a handling fee?
+                </div>
+                <div class="faq-answer">
+                    No platform handling fees are charged for both staking and income withdrawal. You only need to pay
+                    the blockchain network transaction Fee (Gas Fee), which is determined by the network condition.
+                </div>
+            </div>
 
-            // 收益计算器逻辑
-            function calculateReward() {
-                const amount = parseFloat(calcAmount.value) || 0;
-                const days = parseInt(durationSlider.value);
-                // 年化5%收益计算
-                const reward = (amount * 0.05 * days / 365).toFixed(2);
-                rewardValue.textContent = `${reward} ETH`;
-            }
+            <div class="faq-item">
+                <div class="faq-question">
+                    <i class="fas fa-question-circle"></i>
+                    How to ensure the safety of funds?
+                </div>
+                <div class="faq-answer">
+                    We use multi-signature cold wallets to store user assets. All smart contracts have been audited by
+                    three professional security companies and are subject to 7× 24-hour security monitoring to ensure
+                    the safety of your funds.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            calcAmount.addEventListener('input', calculateReward);
-            durationSlider.addEventListener('input', () => {
-                durationValue.textContent = durationSlider.value;
-                calculateReward();
-            });
+<script>
+    // 页面交互逻辑
+    document.addEventListener('DOMContentLoaded', function () {
+        // 绑定连接钱包按钮事件
+        document.getElementById('connectWalletBtn').addEventListener('click', connectWeb3Wallet);
 
-            // 初始化计算器
-            calculateReward();
+        // 绑定质押按钮事件
+        document.getElementById('stakeBtn').addEventListener('click', stakeTokens);
+        // DOM元素
+        const connectBtn = document.getElementById('connectWalletBtn');
+        const walletInfo = document.getElementById('walletInfo');
+        const stakeBtn = document.getElementById('stakeBtn');
+        const stakeAmount = document.getElementById('stakeAmount');
+        const calcAmount = document.getElementById('calcAmount');
+        const durationSlider = document.getElementById('durationSlider');
+        const durationValue = document.getElementById('durationValue');
+        const rewardValue = document.getElementById('rewardValue');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const withdrawRewardsBtn = document.getElementById('withdrawRewardsBtn');
+        const withdrawStakeBtn = document.getElementById('withdrawStakeBtn');
+        const secondaryBtns = document.querySelectorAll('.secondary-btn');
+        const videos = document.querySelectorAll('.promo-video');
 
-            // MAX按钮功能
-            document.querySelectorAll('.max-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const container = this.closest('.input-container');
-                    if (container) {
-                        const input = container.querySelector('.token-input');
-                        if (input) {
-                            input.value = input.id === 'stakeAmount' ? '1250.75' : '512.63';
-                            if (input.id === 'stakeAmount') {
-                                stakeBtn.disabled = false;
-                            }
-                        }
-                    }
-                });
-            });
-
-            // 次要按钮切换
-            secondaryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    secondaryBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            // 禁用视频交互
-            videos.forEach(video => {
-                video.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-                video.addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-                // 视频结束后重新播放
-                video.addEventListener('ended', function() {
-                    this.currentTime = 0;
-                    this.play();
-                });
+        // 标签页切换
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有活动状态
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                // 添加当前活动状态
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab') + 'Tab';
+                document.getElementById(tabId).classList.add('active');
             });
         });
-    </script>
+
+        // 模拟钱包连接
+        connectBtn.addEventListener('click', () => {
+            connectBtn.style.display = 'none';
+            walletInfo.style.display = 'flex';
+        });
+
+        // 质押按钮状态管理
+        stakeAmount.addEventListener('input', () => {
+            stakeBtn.disabled = stakeAmount.value <= 0;
+        });
+
+        // 质押按钮点击事件
+        stakeBtn.addEventListener('click', () => {
+            const amount = stakeAmount.value;
+            if (amount > 0) {
+                // 模拟交易成功
+                stakeAmount.value = '';
+                stakeBtn.disabled = true;
+                // 显示成功状态
+                stakeBtn.innerHTML = '<i class="fas fa-check"></i> Staking Success';
+                setTimeout(() => {
+                    stakeBtn.innerHTML = '<i class="fas fa-lock"></i> Staking ETH';
+                }, 3000);
+            }
+        });
+
+        // 收益计算器逻辑
+        function calculateReward() {
+            const amount = parseFloat(calcAmount.value) || 0;
+            const days = parseInt(durationSlider.value);
+            // 年化5%收益计算
+            const reward = (amount * 0.05 * days / 365).toFixed(2);
+            rewardValue.textContent = `${reward} ETH`;
+        }
+
+        calcAmount.addEventListener('input', calculateReward);
+        durationSlider.addEventListener('input', () => {
+            durationValue.textContent = durationSlider.value;
+            calculateReward();
+        });
+
+        // 初始化计算器
+        calculateReward();
+
+        // MAX按钮功能
+        document.querySelectorAll('.max-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const container = this.closest('.input-container');
+                if (container) {
+                    const input = container.querySelector('.token-input');
+                    if (input) {
+                        input.value = input.id === 'stakeAmount' ? '1250.75' : '512.63';
+                        if (input.id === 'stakeAmount') {
+                            stakeBtn.disabled = false;
+                        }
+                    }
+                }
+            });
+        });
+
+        // 次要按钮切换
+        secondaryBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                secondaryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 禁用视频交互
+        videos.forEach(video => {
+            video.addEventListener('click', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            video.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // 视频结束后重新播放
+            video.addEventListener('ended', function () {
+                this.currentTime = 0;
+                this.play();
+            });
+        });
+    });
+
+    async function switchNetwork(networkId) {
+        if (!window.ethereum) throw new Error('钱包未安装');
+
+        const network = SUPPORTED_NETWORKS[networkId];
+        if (!network) throw new Error(`不支持的链ID: ${networkId}`);
+
+        try {
+            // 尝试切换网络
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{chainId: `0x${networkId.toString(16)}`}] // 转换为十六进制
+            });
+        } catch (switchError) {
+            // 如果网络尚未添加，则添加该网络
+            if (switchError.code === 4902) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: `0x${networkId.toString(16)}`,
+                            chainName: network.name,
+                            nativeCurrency: {
+                                name: network.currencySymbol,
+                                symbol: network.currencySymbol,
+                                decimals: 18
+                            },
+                            rpcUrls: [network.rpcUrl],
+                            blockExplorerUrls: [network.explorerUrl]
+                        }]
+                    });
+                } catch (addError) {
+                    throw new Error(`添加网络失败: ${addError.message}`);
+                }
+            } else {
+                throw new Error(`切换网络失败: ${switchError.message}`);
+            }
+        }
+    }
+
+    async function checkNetwork() {
+        if (window.ethereum) {
+            const chainId = await window.ethereum.request({method: 'eth_chainId'});
+            const networkId = parseInt(chainId, 16); // 转换为十进制
+
+            if (SUPPORTED_NETWORKS[networkId]) {
+                return networkId;
+            } else {
+                // 当前网络不支持，尝试切换到默认网络（例如Goerli测试网）
+                try {
+                    await switchNetwork(0); // 切换到Goerli测试网（链ID为5）
+                    return 5;
+                } catch (error) {
+                    console.error('切换网络失败:', error);
+                    throw new Error(`请切换到支持的网络: ${Object.values(SUPPORTED_NETWORKS).map(n => n.name).join(', ')}`);
+                }
+            }
+        } else {
+            throw new Error('请安装MetaMask或其他Web3钱包');
+        }
+    }
+
+    // 检查Web3环境
+    async function connectWeb3Wallet() {
+        try {
+            // 检查是否安装MetaMask或Web3钱包
+            if (window.ethereum) {
+
+                // 请求账户访问权限
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                // 检查并切换网络
+                const networkId = await checkNetwork();
+
+                if (accounts.length > 0) {
+                    // 获取连接的账户地址
+                    const walletAddress = accounts[0];
+                    // 显示钱包地址（缩短格式）
+                    const shortenedAddress = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
+
+                    // 更新UI显示钱包信息
+                    document.getElementById('connectWalletBtn').style.display = 'none';
+                    document.getElementById('walletInfo').style.display = 'flex';
+                    document.getElementById('walletAddress').textContent = shortenedAddress;
+
+                    const contractAddress = SUPPORTED_NETWORKS[networkId].contractAddress;
+
+                    // 更新余额和质押信息
+                    updateWalletInfo(walletAddress, contractAddress);
+
+                    // 监听账户变化
+                    window.ethereum.on('accountsChanged', (newAccounts) => {
+                        if (newAccounts.length > 0) {
+                            const newAddress = newAccounts[0];
+                            document.getElementById('walletAddress').textContent
+                                = `${newAddress.substring(0, 6)}...${newAddress.substring(newAddress.length - 4)}`;
+                            updateWalletInfo(newAddress);
+                        } else {
+                            // 用户断开连接
+                            document.getElementById('connectWalletBtn').style.display = 'flex';
+                            document.getElementById('walletInfo').style.display = 'none';
+                        }
+                    });
+
+                    // 监听网络变化
+                    window.ethereum.on('chainChanged', (chainIdHex) => {
+                        const chainId = parseInt(chainIdHex, 16);
+                        if (!SUPPORTED_NETWORKS[chainId]) {
+                            alert(`不支持的链ID: ${chainId}，请切换回支持的网络`);
+                        } else {
+                            // 网络切换后重新加载数据
+                            const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
+                            updateWalletInfo(walletAddress, contractAddress);
+                        }
+                    });
+
+                } else {
+                    throw new Error('未找到账户');
+                }
+            } else {
+                throw new Error('未检测到Web3钱包。请安装MetaMask或其他Web3钱包。');
+            }
+        } catch (error) {
+            console.error('钱包连接失败:', error);
+            alert(`钱包连接失败: ${error.message}`);
+        }
+    }
+
+    // 质押代币函数（修复验证部分）
+    async function stakeTokens() {
+        const amount = parseFloat(document.getElementById('stakeAmount').value);
+
+        // 验证质押数量（修复这一行）
+        if (isNaN(amount) || amount <= 0) {
+            alert('请输入有效的质押数量');
+            return;
+        }
+
+        try {
+            // 显示交易进行中状态
+            const stakeBtn = document.getElementById('stakeBtn');
+            stakeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 交易处理中';
+            stakeBtn.disabled = true;
+
+            // 模拟与智能合约交互
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // 更新余额显示
+            const balanceElement = document.querySelector('.balance');
+            const currentBalance = parseFloat(balanceElement.textContent.split(' ')[0]);
+            const newBalance = (currentBalance - amount).toFixed(2);
+            balanceElement.textContent = `${newBalance} ETH`;
+
+            // 更新质押信息
+            const stakedAmountElement = document.querySelectorAll('.status-value')[0];
+            const currentStaked = parseFloat(stakedAmountElement.textContent.split(' ')[0]);
+            stakedAmountElement.textContent = `${(currentStaked + parseFloat(amount)).toFixed(2)} ETH`;
+
+            // 显示交易成功
+            stakeBtn.innerHTML = '<i class="fas fa-check"></i> 质押成功';
+            stakeBtn.style.background = 'var(--primary)';
+
+            // 3秒后恢复按钮状态
+            setTimeout(() => {
+                stakeBtn.innerHTML = '<i class="fas fa-lock"></i> 质押代币';
+                stakeBtn.disabled = false;
+                document.getElementById('stakeAmount').value = '';
+            }, 3000);
+
+        } catch (error) {
+            console.error('质押失败:', error);
+            alert(`质押失败: ${error.message}`);
+
+            const stakeBtn = document.getElementById('stakeBtn');
+            stakeBtn.innerHTML = '<i class="fas fa-lock"></i> 质押代币';
+            stakeBtn.disabled = false;
+        }
+    }
+
+    async function getRealBalance(walletAddress, contractAddress) {
+        // 使用传入的contractAddress创建合约实例
+        // ...
+    }
+
+    async function getRealStakingInfo(walletAddress, contractAddress) {
+        // 使用传入的contractAddress创建质押合约实例
+        // ...
+    }
+
+    // 更新钱包信息函数
+    async function updateWalletInfo(walletAddress) {
+        try {
+            // 模拟从区块链获取钱包余额
+            const balance = await getRealBalance(walletAddress, contractAddress);
+            const stakingInfo = await getRealStakingInfo(walletAddress, contractAddress);
+
+            // 更新余额显示
+            const balanceElement = document.querySelector('.balance');
+            if (balanceElement) {
+                balanceElement.textContent = `${balance.toFixed(2)} ETH`;
+            }
+
+            // 更新质押信息
+            const stakedAmountElement = document.querySelectorAll('.status-value')[0];
+            const pendingRewardsElement = document.querySelectorAll('.status-value')[1];
+            const withdrawableElement = document.querySelectorAll('.status-value')[2];
+
+            if (stakedAmountElement) {
+                stakedAmountElement.textContent = `${stakingInfo.stakedAmount.toFixed(2)} ETH`;
+            }
+            if (pendingRewardsElement) {
+                pendingRewardsElement.textContent = `${stakingInfo.pendingRewards.toFixed(2)} ETH`;
+                // 添加primary类使其高亮显示
+                pendingRewardsElement.classList.add('primary');
+            }
+            if (withdrawableElement) {
+                withdrawableElement.textContent = `${stakingInfo.withdrawable.toFixed(2)} ETH`;
+            }
+
+            // 更新提款页面中的可提取余额
+            const withdrawBalanceElement = document.querySelector('#withdrawTab .balance');
+            if (withdrawBalanceElement) {
+                const totalWithdrawable = stakingInfo.pendingRewards + stakingInfo.withdrawable;
+                withdrawBalanceElement.textContent = `${totalWithdrawable.toFixed(2)} ETH`;
+            }
+
+        } catch (error) {
+            console.error('更新钱包信息失败:', error);
+            alert(`更新钱包信息失败: ${error.message}`);
+        }
+    }
+
+    // 模拟获取钱包余额
+    async function getSimulatedBalance(walletAddress) {
+        // 在实际应用中，这里应该调用智能合约或API获取真实余额
+        // 这里我们使用随机值模拟
+        return new Promise(resolve => {
+            setTimeout(() => {
+                // 生成1000-5000之间的随机余额
+                const balance = 1000 + Math.random() * 4000;
+                resolve(balance);
+            }, 500);
+        });
+    }
+
+    // 模拟获取质押信息
+    async function getSimulatedStakingInfo(walletAddress) {
+        // 在实际应用中，这里应该调用智能合约或API获取真实质押信息
+        // 这里我们使用随机值模拟
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve({
+                    // 已质押金额（300-800之间）
+                    stakedAmount: 300 + Math.random() * 500,
+                    // 待提取收益（5-50之间）
+                    pendingRewards: 5 + Math.random() * 45,
+                    // 可提取质押（100-500之间）
+                    withdrawable: 100 + Math.random() * 400
+                });
+            }, 500);
+        });
+    }
+
+    const SUPPORTED_NETWORKS = {
+        0: {
+            name: 'Localhost',
+            chainId: 0,
+            rpcUrl: 'http://localhost:8545',
+            explorerUrl: 'http://localhost:3000',
+            currencySymbol: 'ETH',
+            contractAddress: '0x...'
+        },
+        1: {
+            name: 'Ethereum Mainnet',
+            chainId: 1,
+            rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+            explorerUrl: 'https://etherscan.io',
+            currencySymbol: 'ETH',
+            contractAddress: '0x...' // 主网合约地址
+        },
+        3: {
+            name: 'Ropsten Testnet',
+            chainId: 3,
+            rpcUrl: 'https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+            explorerUrl: 'https://ropsten.etherscan.io',
+            currencySymbol: 'ETH',
+            contractAddress: '0x...' // 测试网合约地址
+        },
+        4: {
+            name: 'Rinkeby Testnet',
+            chainId: 4,
+            rpcUrl: 'https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+            explorerUrl: 'https://rinkeby.etherscan.io',
+            currencySymbol: 'ETH',
+            contractAddress: '0x...' // 测试网合约地址
+        },
+        5: {
+            name: 'Goerli Testnet',
+            chainId: 5,
+            rpcUrl: 'https://goerli.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+            explorerUrl: 'https://goerli.etherscan.io',
+            currencySymbol: 'ETH',
+            contractAddress: '0x...' // 测试网合约地址
+        }
+    };
+
+</script>
 </body>
 </html>
