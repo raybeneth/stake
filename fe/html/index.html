@@ -719,7 +719,7 @@
         </button>
         <div class="wallet-info" id="walletInfo" style="display: none;">
             <i class="fas fa-wallet"></i>
-            <span id="walletAddress">0x742d...C3B9</span>
+            <span id="walletAddress">Loading...</span>
         </div>
     </div>
 </nav>
@@ -773,7 +773,7 @@
     <div class="tabs">
         <button class="tab-btn active" data-tab="stake">Easy Staking</button>
         <button class="tab-btn" data-tab="withdraw">Withdrawal</button>
-        <button class="tab-btn" data-tab="calculator">Revenue calculation</button>
+        <button class="tab-btn" data-tab="calculator">Calculation</button>
     </div>
 
     <!-- 质押卡片 -->
@@ -1140,10 +1140,9 @@
             if (SUPPORTED_NETWORKS[networkId]) {
                 return networkId;
             } else {
-                // 当前网络不支持，尝试切换到默认网络（例如Goerli测试网）
                 try {
-                    await switchNetwork(0); // 切换到Goerli测试网（链ID为5）
-                    return 5;
+                    await switchNetwork(0);
+                    return 0;
                 } catch (error) {
                     console.error('切换网络失败:', error);
                     throw new Error(`请切换到支持的网络: ${Object.values(SUPPORTED_NETWORKS).map(n => n.name).join(', ')}`);
@@ -1217,6 +1216,8 @@
                 throw new Error('未检测到Web3钱包。请安装MetaMask或其他Web3钱包。');
             }
         } catch (error) {
+            document.getElementById('connectWalletBtn').style.display = 'flex';
+            document.getElementById('walletInfo').style.display = 'none';
             console.error('钱包连接失败:', error);
             alert(`钱包连接失败: ${error.message}`);
         }
