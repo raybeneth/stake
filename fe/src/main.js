@@ -1,6 +1,40 @@
 import './css/style.css'
 import './js/index.js'
+import {createAppKit} from '@reown/appkit'
+import {sepolia} from '@reown/appkit/networks'
+import {WagmiAdapter} from '@reown/appkit-adapter-wagmi'
 
+// 1. 从 https://cloud.reown.com 获取项目ID
+const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a'
+
+export const networks = [sepolia]
+
+// 2. 设置Wagmi适配器
+const wagmiAdapter = new WagmiAdapter({
+    projectId,
+    networks
+})
+
+// 3. 配置元数据
+const metadata = {
+    name: 'AppKit',
+    description: 'AppKit Example',
+    url: 'http://127.0.0.1:5173',
+    icons: ['https://avatars.githubusercontent.com/u/179229932']
+}
+
+// 3. 创建模态框
+const modal = createAppKit({
+    adapters: [wagmiAdapter],
+    networks: [sepolia],
+    metadata,
+    projectId,
+    features: {
+        analytics: false // 可选 - 默认为您的云配置
+    }
+})
+
+// 先设置HTML内容
 document.querySelector('#app').innerHTML = `
 <!-- 导航栏 -->
 <nav class="navbar">
@@ -13,7 +47,7 @@ document.querySelector('#app').innerHTML = `
     </div>
     <div class="wallet-section">
         <button class="connect-btn" id="connectWalletBtn">
-            <i class="fas fa-wallet"></i> Content Wallet
+            <i class="fas fa-wallet"></i> Connect Wallet
         </button>
         <div class="wallet-info" id="walletInfo" style="display: none;">
             <i class="fas fa-wallet"></i>
@@ -182,7 +216,7 @@ document.querySelector('#app').innerHTML = `
                 </div>
             </div>
             <div class="reward-display">
-                <div class="reward-subtext">Overdue income</div>
+                <div class="reward-subtext">Estimated income</div>
                 <div class="reward-value" id="rewardValue">3.00 ETH</div>
                 <div class="reward-subtext">Calculated based on an annualized rate of return of 5%</div>
             </div>
@@ -265,4 +299,173 @@ document.querySelector('#app').innerHTML = `
         </div>
     </div>
 </div>
-`
+`;
+// 获取DOM元素
+const connectWalletBtn = document.getElementById('connectWalletBtn');
+const walletInfo = document.getElementById('walletInfo');
+const walletAddress = document.getElementById('walletAddress');
+
+// 创建更可靠的钱包地址获取方法
+async function getWalletAddress() {
+  try {
+    // 方法1: 使用 getAccount API
+    if (typeof modal.getAccount === 'function') {
+      console.log('使用 getAccount API');
+      const account = await modal.getAccount();
+      console.log('getAccount 返回:', account);
+      return account;
+    }
+
+    // 方法2: 通过 getSigner 获取
+    if (typeof modal.getSigner === 'function') {
+      console.log('使用 getSigner 获取');
+      const signer = await modal.getSigner();
+      const address = await signer.getAddress();
+      console.log('getSigner 返回:', address);
+      return address;
+    }
+
+    // 方法3: 检查全局以太坊对象
+    if (window.ethereum && window.ethereum.selectedAddress) {
+      console.log('使用全局 ethereum 对象');
+      return window.ethereum.selectedAddress;
+    }
+
+    // 方法4: 检查 localStorage 存储
+    const storedAddress = localStorage.getItem('walletAddress');
+    if (storedAddress) return storedAddress;
+
+    return null;
+  } catch (error) {
+    console.error('获取钱包地址失败:', error);
+    return null;
+  }
+}
+
+// 更新钱包显示状态
+async function updateWalletDisplay() {
+  try {
+    const addressInfo = await getWalletAddress();
+    console.log('updateWalletDisplay 获取的地址:', addressInfo);
+
+    // 确保地址是字符串类型
+    const address = addressInfo.address;
+
+    if (address) {
+      // 连接成功
+      connectWalletBtn.style.display = 'none';
+      walletInfo.style.display = 'flex';
+
+      // 安全地处理地址格式化
+      let formattedAddress;
+      try {
+        formattedAddress = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+      } catch (e) {
+        console.error('地址格式化错误:', e, '原始地址:', address);
+        formattedAddress = address; // 使用完整地址作为后备
+      }
+
+      walletAddress.textContent = formattedAddress;
+      localStorage.setItem('walletAddress', address);
+    } else {
+      // 断开连接
+      connectWalletBtn.style.display = 'block';
+      walletInfo.style.display = 'none';
+      localStorage.removeItem('walletAddress');
+    }
+  } catch (error) {
+    console.error('更新钱包显示失败:', error);
+    // 出错时显示连接按钮
+    connectWalletBtn.style.display = 'block';
+    walletInfo.style.display = 'none';
+  }
+}
+
+// 设置事件监听器
+connectWalletBtn.addEventListener('click', () => {
+  modal.open();
+
+  // 添加连接后的处理
+  setTimeout(updateWalletDisplay, 1000); // 2秒后检查状态
+});
+
+// 点击钱包信息区域时打开AppKit（断开连接入口）
+walletInfo.addEventListener('click', () => {
+  modal.open();
+});
+
+// 设置钱包状态检查
+function setupWalletMonitoring() {
+  // 1. 监听常见区块链事件
+  const events = ['accountsChanged', 'chainChanged', 'connect', 'disconnect'];
+  events.forEach(event => {
+    window.addEventListener(event, updateWalletDisplay);
+  });
+
+  // 2. 定期检查钱包状态
+  setInterval(updateWalletDisplay, 1000); // 每5秒检查一次
+
+  // 3. 页面可见性变化时检查
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      updateWalletDisplay();
+    }
+  });
+
+  // 4. 初始检查
+  updateWalletDisplay();
+}
+
+// 初始化钱包监控
+setupWalletMonitoring();
+
+// 标签页切换功能
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // 移除所有活动类
+    tabBtns.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+
+    // 添加活动类
+    btn.classList.add('active');
+    const tabId = `${btn.dataset.tab}Tab`;
+    document.getElementById(tabId).classList.add('active');
+  });
+});
+
+// 计算器功能
+const calcAmount = document.getElementById('calcAmount');
+const durationSlider = document.getElementById('durationSlider');
+const durationValue = document.getElementById('durationValue');
+const rewardValue = document.getElementById('rewardValue');
+
+function calculateReward() {
+  const amount = parseFloat(calcAmount.value) || 0;
+  const days = parseInt(durationSlider.value);
+  const apy = 0.05; // 5% 年化收益率
+
+  // 计算收益: 本金 * 年化收益率 * (天数/365)
+  const reward = amount * apy * (days / 365);
+  rewardValue.textContent = `${reward.toFixed(2)} ETH`;
+}
+
+calcAmount.addEventListener('input', calculateReward);
+durationSlider.addEventListener('input', () => {
+  durationValue.textContent = durationSlider.value;
+  calculateReward();
+});
+
+// 初始化计算器
+calculateReward();
+
+// 添加MAX按钮功能
+document.querySelectorAll('.max-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = btn.closest('.input-container').querySelector('input');
+    // 在实际应用中，这里应该获取用户的实际余额
+    input.value = '1000'; // 示例值
+  });
+});

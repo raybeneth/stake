@@ -611,7 +611,7 @@ body {
     .wallet-info {
         padding: 6px 12px;
         font-size: 12px;
-        max-width: 100px;
+        max-width: 120px;
     }
 
     .action-btn {

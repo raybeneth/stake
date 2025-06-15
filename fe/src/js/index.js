@@ -3,7 +3,7 @@ import {ethers, JsonRpcProvider} from "ethers";
 
 document.addEventListener('DOMContentLoaded', function () {
     // 绑定连接钱包按钮事件
-    document.getElementById('connectWalletBtn').addEventListener('click', connectWeb3Wallet);
+    // document.getElementById('connectWalletBtn').addEventListener('click', connectWeb3Wallet);
 
     // 绑定质押按钮事件
     document.getElementById('stakeBtn').addEventListener('click', stakeTokens);
@@ -311,7 +311,6 @@ async function getRealBalance(walletAddress) {
         const provider = new JsonRpcProvider('https://sepolia.infura.io/v3/1d83645699b6449cb5b609abc08f0a87');
 
         // 2. 获取指定地址的 ETH 余额（单位：Wei）
-        alert(import.meta.env.MAIN_NETWORK)
         const balanceWei = await provider.getBalance(walletAddress);
 
         // 3. 将 Wei 转换为 ETH（显示为 4 位小数）
@@ -346,7 +345,6 @@ async function updateWalletInfo(walletAddress, contractAddress) {
         const pendingRewardsElement = document.querySelectorAll('.status-value')[1];
         const withdrawableElement = document.querySelectorAll('.status-value')[2];
 
-        alert(JSON.stringify(stakingInfo))
         if (stakedAmountElement) {
             stakedAmountElement.textContent = `${stakingInfo.stakedAmount.toFixed(2)} ETH`;
         }
