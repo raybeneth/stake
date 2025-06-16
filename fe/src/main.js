@@ -1,8 +1,8 @@
 import './css/style.css'
 import './js/index.js'
-import {createAppKit} from '@reown/appkit'
-import {sepolia} from '@reown/appkit/networks'
-import {WagmiAdapter} from '@reown/appkit-adapter-wagmi'
+import { createAppKit } from '@reown/appkit'
+import { sepolia } from '@reown/appkit/networks'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
 // 1. 从 https://cloud.reown.com 获取项目ID
 const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a'
@@ -121,7 +121,7 @@ document.querySelector('#app').innerHTML = `
             <div class="input-group">
                 <div class="input-label">
                     <span>Quantity of pledge</span>
-                    <span>Balance: <span class="balance">1,250.75 ETH</span></span>
+                    <span>Balance: <span class="balance" id="ETHbalance">0 ETH</span></span>
                 </div>
                 <div class="input-container">
                     <input type="number" class="token-input" id="stakeAmount" placeholder="0.0" min="0" step="0.01">
@@ -304,116 +304,148 @@ document.querySelector('#app').innerHTML = `
 const connectWalletBtn = document.getElementById('connectWalletBtn');
 const walletInfo = document.getElementById('walletInfo');
 const walletAddress = document.getElementById('walletAddress');
+const balance = document.getElementById('ETHbalance');
 
 // 创建更可靠的钱包地址获取方法
 async function getWalletAddress() {
-  try {
-    // 方法1: 使用 getAccount API
-    if (typeof modal.getAccount === 'function') {
-      console.log('使用 getAccount API');
-      const account = await modal.getAccount();
-      console.log('getAccount 返回:', account);
-      return account;
+    try {
+        // 方法1: 使用 getAccount API
+        if (typeof modal.getAccount === 'function') {
+            console.log('使用 getAccount API');
+            const account = await modal.getAccount();
+            console.log('getAccount 返回:', account);
+            return account;
+        }
+
+        // 方法2: 通过 getSigner 获取
+        if (typeof modal.getSigner === 'function') {
+            console.log('使用 getSigner 获取');
+            const signer = await modal.getSigner();
+            const address = await signer.getAddress();
+            console.log('getSigner 返回:', address);
+            return address;
+        }
+
+        // 方法3: 检查全局以太坊对象
+        if (window.ethereum && window.ethereum.selectedAddress) {
+            console.log('使用全局 ethereum 对象');
+            return window.ethereum.selectedAddress;
+        }
+
+        // 方法4: 检查 localStorage 存储
+        const storedAddress = localStorage.getItem('walletAddress');
+        if (storedAddress) return storedAddress;
+
+        return null;
+    } catch (error) {
+        console.error('获取钱包地址失败:', error);
+        return null;
     }
-
-    // 方法2: 通过 getSigner 获取
-    if (typeof modal.getSigner === 'function') {
-      console.log('使用 getSigner 获取');
-      const signer = await modal.getSigner();
-      const address = await signer.getAddress();
-      console.log('getSigner 返回:', address);
-      return address;
-    }
-
-    // 方法3: 检查全局以太坊对象
-    if (window.ethereum && window.ethereum.selectedAddress) {
-      console.log('使用全局 ethereum 对象');
-      return window.ethereum.selectedAddress;
-    }
-
-    // 方法4: 检查 localStorage 存储
-    const storedAddress = localStorage.getItem('walletAddress');
-    if (storedAddress) return storedAddress;
-
-    return null;
-  } catch (error) {
-    console.error('获取钱包地址失败:', error);
-    return null;
-  }
 }
 
 // 更新钱包显示状态
 async function updateWalletDisplay() {
-  try {
-    const addressInfo = await getWalletAddress();
-    console.log('updateWalletDisplay 获取的地址:', addressInfo);
+    try {
+        const addressInfo = await getWalletAddress();
+        console.log('updateWalletDisplay 获取的地址:', addressInfo);
 
-    // 确保地址是字符串类型
-    const address = addressInfo.address;
+        // 确保地址是字符串类型
+        const address = addressInfo.address;
 
-    if (address) {
-      // 连接成功
-      connectWalletBtn.style.display = 'none';
-      walletInfo.style.display = 'flex';
+        if (address) {
+            // 连接成功
+            connectWalletBtn.style.display = 'none';
+            walletInfo.style.display = 'flex';
 
-      // 安全地处理地址格式化
-      let formattedAddress;
-      try {
-        formattedAddress = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-      } catch (e) {
-        console.error('地址格式化错误:', e, '原始地址:', address);
-        formattedAddress = address; // 使用完整地址作为后备
-      }
+            let ETHbalance = getEthBalance(address);
+            console.log('ETH余额=', JSON.stringify(ETHbalance));
 
-      walletAddress.textContent = formattedAddress;
-      localStorage.setItem('walletAddress', address);
-    } else {
-      // 断开连接
-      connectWalletBtn.style.display = 'block';
-      walletInfo.style.display = 'none';
-      localStorage.removeItem('walletAddress');
+            // 安全地处理地址格式化
+            let formattedAddress;
+            try {
+                formattedAddress = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+            } catch (e) {
+                console.error('地址格式化错误:', e, '原始地址:', address);
+                formattedAddress = address; // 使用完整地址作为后备
+            }
+            balance.textContent = ETHbalance;
+            walletAddress.textContent = formattedAddress;
+            localStorage.setItem('walletAddress', address);
+        } else {
+            // 断开连接
+            connectWalletBtn.style.display = 'block';
+            walletInfo.style.display = 'none';
+            localStorage.removeItem('walletAddress');
+        }
+    } catch (error) {
+        console.error('更新钱包显示失败:', error);
+        // 出错时显示连接按钮
+        connectWalletBtn.style.display = 'block';
+        walletInfo.style.display = 'none';
     }
-  } catch (error) {
-    console.error('更新钱包显示失败:', error);
-    // 出错时显示连接按钮
-    connectWalletBtn.style.display = 'block';
-    walletInfo.style.display = 'none';
-  }
+}
+
+// 获取 ETH 余额
+async function getEthBalance(address) {
+    try {
+        if (!window.ethereum) {
+            console.error('Ethereum 对象不存在');
+            return '0';
+        }
+
+        // 使用 eth_getBalance 获取余额（单位为 wei）
+        const balanceHex = await window.ethereum.request({
+            method: 'eth_getBalance',
+            params: [address, 'latest']
+        });
+
+        // 将十六进制余额转换为十进制（wei）
+        const balanceWei = parseInt(balanceHex, 16);
+
+        // 转换为 ETH（1 ETH = 10^18 wei）
+        const balanceEth = balanceWei / 1e18;
+
+        // 保留 4 位小数
+        return balanceEth.toFixed(4);
+    } catch (error) {
+        console.error('获取余额失败:', error);
+        return '0';
+    }
 }
 
 // 设置事件监听器
 connectWalletBtn.addEventListener('click', () => {
-  modal.open();
+    modal.open();
 
-  // 添加连接后的处理
-  setTimeout(updateWalletDisplay, 1000); // 2秒后检查状态
+    // 添加连接后的处理
+    setTimeout(updateWalletDisplay, 1000); // 2秒后检查状态
 });
 
 // 点击钱包信息区域时打开AppKit（断开连接入口）
 walletInfo.addEventListener('click', () => {
-  modal.open();
+    modal.open();
 });
 
 // 设置钱包状态检查
 function setupWalletMonitoring() {
-  // 1. 监听常见区块链事件
-  const events = ['accountsChanged', 'chainChanged', 'connect', 'disconnect'];
-  events.forEach(event => {
-    window.addEventListener(event, updateWalletDisplay);
-  });
+    // 1. 监听常见区块链事件
+    const events = ['accountsChanged', 'chainChanged', 'connect', 'disconnect'];
+    events.forEach(event => {
+        window.addEventListener(event, updateWalletDisplay);
+    });
 
-  // 2. 定期检查钱包状态
-  setInterval(updateWalletDisplay, 1000); // 每5秒检查一次
+    // 2. 定期检查钱包状态
+    setInterval(updateWalletDisplay, 1000); // 每5秒检查一次
 
-  // 3. 页面可见性变化时检查
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      updateWalletDisplay();
-    }
-  });
+    // 3. 页面可见性变化时检查
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            updateWalletDisplay();
+        }
+    });
 
-  // 4. 初始检查
-  updateWalletDisplay();
+    // 4. 初始检查
+    updateWalletDisplay();
 }
 
 // 初始化钱包监控
@@ -424,16 +456,16 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
 
 tabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    // 移除所有活动类
-    tabBtns.forEach(b => b.classList.remove('active'));
-    tabContents.forEach(c => c.classList.remove('active'));
+    btn.addEventListener('click', () => {
+        // 移除所有活动类
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
 
-    // 添加活动类
-    btn.classList.add('active');
-    const tabId = `${btn.dataset.tab}Tab`;
-    document.getElementById(tabId).classList.add('active');
-  });
+        // 添加活动类
+        btn.classList.add('active');
+        const tabId = `${btn.dataset.tab}Tab`;
+        document.getElementById(tabId).classList.add('active');
+    });
 });
 
 // 计算器功能
@@ -443,19 +475,19 @@ const durationValue = document.getElementById('durationValue');
 const rewardValue = document.getElementById('rewardValue');
 
 function calculateReward() {
-  const amount = parseFloat(calcAmount.value) || 0;
-  const days = parseInt(durationSlider.value);
-  const apy = 0.05; // 5% 年化收益率
+    const amount = parseFloat(calcAmount.value) || 0;
+    const days = parseInt(durationSlider.value);
+    const apy = 0.05; // 5% 年化收益率
 
-  // 计算收益: 本金 * 年化收益率 * (天数/365)
-  const reward = amount * apy * (days / 365);
-  rewardValue.textContent = `${reward.toFixed(2)} ETH`;
+    // 计算收益: 本金 * 年化收益率 * (天数/365)
+    const reward = amount * apy * (days / 365);
+    rewardValue.textContent = `${reward.toFixed(2)} ETH`;
 }
 
 calcAmount.addEventListener('input', calculateReward);
 durationSlider.addEventListener('input', () => {
-  durationValue.textContent = durationSlider.value;
-  calculateReward();
+    durationValue.textContent = durationSlider.value;
+    calculateReward();
 });
 
 // 初始化计算器
@@ -463,9 +495,9 @@ calculateReward();
 
 // 添加MAX按钮功能
 document.querySelectorAll('.max-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const input = btn.closest('.input-container').querySelector('input');
-    // 在实际应用中，这里应该获取用户的实际余额
-    input.value = '1000'; // 示例值
-  });
+    btn.addEventListener('click', () => {
+        const input = btn.closest('.input-container').querySelector('input');
+        // 在实际应用中，这里应该获取用户的实际余额
+        input.value = '1000'; // 示例值
+    });
 });
