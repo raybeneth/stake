@@ -311,24 +311,19 @@ async function getWalletAddress() {
     try {
         // 方法1: 使用 getAccount API
         if (typeof modal.getAccount === 'function') {
-            console.log('使用 getAccount API');
             const account = await modal.getAccount();
-            console.log('getAccount 返回:', account);
             return account;
         }
 
         // 方法2: 通过 getSigner 获取
         if (typeof modal.getSigner === 'function') {
-            console.log('使用 getSigner 获取');
             const signer = await modal.getSigner();
             const address = await signer.getAddress();
-            console.log('getSigner 返回:', address);
             return address;
         }
 
         // 方法3: 检查全局以太坊对象
         if (window.ethereum && window.ethereum.selectedAddress) {
-            console.log('使用全局 ethereum 对象');
             return window.ethereum.selectedAddress;
         }
 
@@ -347,7 +342,6 @@ async function getWalletAddress() {
 async function updateWalletDisplay() {
     try {
         const addressInfo = await getWalletAddress();
-        console.log('updateWalletDisplay 获取的地址:', addressInfo);
 
         // 确保地址是字符串类型
         const address = addressInfo.address;
@@ -357,9 +351,7 @@ async function updateWalletDisplay() {
             connectWalletBtn.style.display = 'none';
             walletInfo.style.display = 'flex';
 
-            let ETHbalance = getEthBalance(address);
-            console.log('ETH余额=', JSON.stringify(ETHbalance));
-
+            let ethBalance = await getEthBalance(address);
             // 安全地处理地址格式化
             let formattedAddress;
             try {
@@ -368,7 +360,7 @@ async function updateWalletDisplay() {
                 console.error('地址格式化错误:', e, '原始地址:', address);
                 formattedAddress = address; // 使用完整地址作为后备
             }
-            balance.textContent = ETHbalance;
+            balance.textContent = ethBalance;
             walletAddress.textContent = formattedAddress;
             localStorage.setItem('walletAddress', address);
         } else {

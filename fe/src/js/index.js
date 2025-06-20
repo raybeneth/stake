@@ -87,7 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (container) {
                 const input = container.querySelector('.token-input');
                 if (input) {
-                    input.value = input.id === 'stakeAmount' ? '1250.75' : '512.63';
+                    input.value = input.id === 'stakeAmount' ?
+                        document.querySelector('.balance').textContent: '512.63';
                     if (input.id === 'stakeAmount') {
                         stakeBtn.disabled = false;
                     }
