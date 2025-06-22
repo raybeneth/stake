@@ -268,41 +268,103 @@ async function stakeTokens() {
     try {
         // 显示交易进行中状态
         const stakeBtn = document.getElementById('stakeBtn');
-        stakeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 交易处理中';
+        stakeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         stakeBtn.disabled = true;
-
-        // 模拟与智能合约交互
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // 更新余额显示
-        const balanceElement = document.querySelector('.balance');
-        const currentBalance = parseFloat(balanceElement.textContent.split(' ')[0]);
-        const newBalance = (currentBalance - amount).toFixed(2);
+        
+        // 获取用户输入的质押数量
+        const amountInput = document.getElementById('stakeAmount');
+        const amount = parseFloat(amountInput.value);
+        
+        // 验证输入
+        if (isNaN(amount) || amount <= 0) {
+            throw new Error("请输入有效的质押数量");
+        }
+        
+        // 获取智能合约实例
+        SUPPORTED_NETWORKS[provider.network.chainId];
+        const contractAddress = "0xYourContractAddress"; // 替换为实际合约地址
+        const contractABI = [...]; // 替换为实际合约ABI
+        
+        // 获取签名者（已连接的钱包）
+        const signer = await modal.getSigner();
+        
+        // 创建合约实例
+        const stakingContract = new ethers.Contract(contractAddress, contractABI, signer);
+        
+        // 调用智能合约的质押函数
+        const tx = await stakingContract.stake(
+            ethers.parseEther(amount.toString()), // 转换为wei
+            { 
+                gasLimit: 300000, // 设置合适的gas限制
+                value: ethers.parseEther(amount.toString()) // 如果是ETH质押需要包含value
+            }
+        );
+        
+        // 显示交易哈希
+        console.log("交易已发送，哈希:", tx.hash);
+        
+        // 等待交易确认（2个区块确认）
+        const receipt = await tx.wait(2);
+        console.log("交易已确认，区块:", receipt.blockNumber);
+        
+        // 更新余额显示（从链上获取最新余额）
+        const address = await signer.getAddress();
+        const newBalance = await getEthBalance(address);
+        const balanceElement = document.getElementById('ETHbalance');
         balanceElement.textContent = `${newBalance} ETH`;
-
-        // 更新质押信息
-        const stakedAmountElement = document.querySelectorAll('.status-value')[0];
-        const currentStaked = parseFloat(stakedAmountElement.textContent.split(' ')[0]);
-        stakedAmountElement.textContent = `${(currentStaked + parseFloat(amount)).toFixed(2)} ETH`;
-
+        
+        // 更新质押信息（从智能合约事件或状态读取）
+        const stakedAmount = await stakingContract.getStakedAmount(address);
+        const stakedAmountElement = document.querySelector('.status-value');
+        stakedAmountElement.textContent = `${ethers.formatEther(stakedAmount)} ETH`;
+        
         // 显示交易成功
-        stakeBtn.innerHTML = '<i class="fas fa-check"></i> 质押成功';
+        stakeBtn.innerHTML = '<i class="fas fa-check"></i> Staking Success';
         stakeBtn.style.background = 'var(--primary)';
-
+        
         // 3秒后恢复按钮状态
         setTimeout(() => {
             stakeBtn.innerHTML = '<i class="fas fa-lock"></i> Staking';
             stakeBtn.disabled = false;
-            document.getElementById('stakeAmount').value = '';
+            amountInput.value = '';
         }, 3000);
-
     } catch (error) {
         console.error('质押失败:', error);
-        alert(`质押失败: ${error.message}`);
-
+        
+        // 用户友好的错误消息
+        let errorMessage = "交易失败";
+        if (error.code === "INSUFFICIENT_FUNDS") {
+            errorMessage = "余额不足";
+        } else if (error.code === "ACTION_REJECTED") {
+            errorMessage = "用户拒绝了交易";
+        } else if (error.message.includes("exceeds balance")) {
+            errorMessage = "质押金额超过余额";
+        }
+        
+        alert(`质押失败: ${errorMessage}`);
+        
         const stakeBtn = document.getElementById('stakeBtn');
-        stakeBtn.innerHTML = '<i class="fas fa-lock"></i> 质押代币';
+        stakeBtn.innerHTML = '<i class="fas fa-lock"></i> Staking';
         stakeBtn.disabled = false;
+    }
+}
+
+const SUPPORTED_NETWORKS = {
+    31337: {
+        name: 'Localhost',
+        chainId: 31337,
+        rpcUrl: 'https://b224-112-10-132-186.ngrok-free.app',
+        explorerUrl: 'http://localhost:3000',
+        currencySymbol: 'ETH',
+        contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+    },
+    1: {
+        name: 'Ethereum Mainnet',
+        chainId: 1,
+        rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+        explorerUrl: 'https://etherscan.io',
+        currencySymbol: 'ETH',
+        contractAddress: '0x...' // 主网合约地址
     }
 }
 
@@ -402,45 +464,3 @@ async function getSimulatedStakingInfo(walletAddress) {
     });
 }
 
-const SUPPORTED_NETWORKS = {
-    0: {
-        name: 'Localhost',
-        chainId: 0,
-        rpcUrl: 'http://localhost:8545',
-        explorerUrl: 'http://localhost:3000',
-        currencySymbol: 'ETH',
-        contractAddress: '0x...'
-    },
-    1: {
-        name: 'Ethereum Mainnet',
-        chainId: 1,
-        rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-        explorerUrl: 'https://etherscan.io',
-        currencySymbol: 'ETH',
-        contractAddress: '0x...' // 主网合约地址
-    },
-    3: {
-        name: 'Ropsten Testnet',
-        chainId: 3,
-        rpcUrl: 'https://ropsten.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-        explorerUrl: 'https://ropsten.etherscan.io',
-        currencySymbol: 'ETH',
-        contractAddress: '0x...' // 测试网合约地址
-    },
-    4: {
-        name: 'Rinkeby Testnet',
-        chainId: 4,
-        rpcUrl: 'https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-        explorerUrl: 'https://rinkeby.etherscan.io',
-        currencySymbol: 'ETH',
-        contractAddress: '0x...' // 测试网合约地址
-    },
-    5: {
-        name: 'Goerli Testnet',
-        chainId: 5,
-        rpcUrl: 'https://goerli.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-        explorerUrl: 'https://goerli.etherscan.io',
-        currencySymbol: 'ETH',
-        contractAddress: '0x...' // 测试网合约地址
-    }
-}

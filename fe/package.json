@@ -19,6 +19,8 @@
     "@reown/appkit-scaffold-ui": "^1.7.9",
     "@reown/appkit-ui": "^1.7.9",
     "@tanstack/react-query": "^5.80.7",
+    "@wagmi/connectors": "^5.8.5",
+    "@wagmi/core": "^2.17.3",
     "@walletconnect/ethereum-provider": "^2.21.2",
     "@walletconnect/utils": "^2.21.2",
     "@web3modal/standalone": "^2.4.3",
@@ -26,7 +28,7 @@
     "ethers": "^6.14.4",
     "events": "^3.3.0",
     "stream-browserify": "^3.0.0",
-    "viem": "^2.31.2",
+    "viem": "^2.31.4",
     "wagmi": "^2.15.6",
     "walletconnect": "^1.7.8"
   }

@@ -3,11 +3,34 @@ import './js/index.js'
 import { createAppKit } from '@reown/appkit'
 import { sepolia } from '@reown/appkit/networks'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { formatEther } from 'ethers';
+import { JsonRpcProvider } from 'ethers';
+import config from '../public/abi/ETHStaking.json' assert { type: 'json' };
+import { ethers } from 'ethers';
+import { encodeFunctionData, parseEther} from 'viem';
+import { sendTransaction } from '@wagmi/core'
+
 
 // 1. 从 https://cloud.reown.com 获取项目ID
 const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a'
+const hardhat = {
+  id: 31337,
+  name: 'Hardhat',
+  network: 'hardhat',
+  nativeCurrency: {
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 18
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://b224-112-10-132-186.ngrok-free.app'] // 必须是 HTTPS
+    }
+  },
+  testnet: true
+}
 
-export const networks = [sepolia]
+export const networks = [sepolia, hardhat]
 
 // 2. 设置Wagmi适配器
 const wagmiAdapter = new WagmiAdapter({
@@ -26,7 +49,7 @@ const metadata = {
 // 3. 创建模态框
 const modal = createAppKit({
     adapters: [wagmiAdapter],
-    networks: [sepolia],
+    networks: networks,
     metadata,
     projectId,
     features: {
@@ -305,6 +328,7 @@ const connectWalletBtn = document.getElementById('connectWalletBtn');
 const walletInfo = document.getElementById('walletInfo');
 const walletAddress = document.getElementById('walletAddress');
 const balance = document.getElementById('ETHbalance');
+document.getElementById('stakeBtn').addEventListener('click', stakeTokens);
 
 // 创建更可靠的钱包地址获取方法
 async function getWalletAddress() {
@@ -350,7 +374,6 @@ async function updateWalletDisplay() {
             // 连接成功
             connectWalletBtn.style.display = 'none';
             walletInfo.style.display = 'flex';
-
             let ethBalance = await getEthBalance(address);
             // 安全地处理地址格式化
             let formattedAddress;
@@ -377,28 +400,56 @@ async function updateWalletDisplay() {
     }
 }
 
+function getJSONRpcProvider(chainId) {
+    return new JsonRpcProvider(SUPPORTED_NETWORKS[chainId].rpcUrl);
+}
+
+const SUPPORTED_NETWORKS = {
+    31337: {
+        name: 'Localhost',
+        chainId: 31337,
+        rpcUrl: 'https://b224-112-10-132-186.ngrok-free.app',
+        explorerUrl: 'http://localhost:3000',
+        currencySymbol: 'ETH',
+        contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+    },
+    1: {
+        name: 'Ethereum Mainnet',
+        chainId: 1,
+        rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+        explorerUrl: 'https://etherscan.io',
+        currencySymbol: 'ETH',
+        contractAddress: '0x...' // 主网合约地址
+    }
+}
+
 // 获取 ETH 余额
 async function getEthBalance(address) {
     try {
-        if (!window.ethereum) {
-            console.error('Ethereum 对象不存在');
+        let provider;
+        try {
+                const chainId = modal.getChainId();
+                provider = getJSONRpcProvider(chainId);
+            } catch (error) {
+                console.error('创建 ethers provider 失败:', error);
+            }
+        if (provider) {
+        
+            // 获取当前网络信息
+            const network = await provider.getNetwork();
+            console.log("当前链 ID:", network.chainId);
+            
+            // 使用 provider 获取余额
+            const balance = await provider.getBalance(address);
+            
+            // 使用 ethers 工具函数正确转换
+            const balanceEth = formatEther(balance);
+            
+            // 保留 4 位小数
+            return parseFloat(balanceEth).toFixed(4);
+        } else {
             return '0';
         }
-
-        // 使用 eth_getBalance 获取余额（单位为 wei）
-        const balanceHex = await window.ethereum.request({
-            method: 'eth_getBalance',
-            params: [address, 'latest']
-        });
-
-        // 将十六进制余额转换为十进制（wei）
-        const balanceWei = parseInt(balanceHex, 16);
-
-        // 转换为 ETH（1 ETH = 10^18 wei）
-        const balanceEth = balanceWei / 1e18;
-
-        // 保留 4 位小数
-        return balanceEth.toFixed(4);
     } catch (error) {
         console.error('获取余额失败:', error);
         return '0';
@@ -406,11 +457,22 @@ async function getEthBalance(address) {
 }
 
 // 设置事件监听器
-connectWalletBtn.addEventListener('click', () => {
-    modal.open();
-
-    // 添加连接后的处理
-    setTimeout(updateWalletDisplay, 1000); // 2秒后检查状态
+connectWalletBtn.addEventListener('click', async() => {
+    try {
+        // 打开钱包连接
+        await modal.open();
+        
+        // 确保切换到 Hardhat 网络
+        // if (modal.switchNetwork) {
+        //     await modal.switchNetwork(hardhat.id);
+        //     console.log("已切换到 Hardhat 网络");
+        // }
+        
+        // 更新显示
+        await updateWalletDisplay();
+    } catch (error) {
+        console.error('连接失败:', error);
+    }
 });
 
 // 点击钱包信息区域时打开AppKit（断开连接入口）
@@ -493,3 +555,90 @@ document.querySelectorAll('.max-btn').forEach(btn => {
         input.value = '1000'; // 示例值
     });
 });
+
+
+// 质押代币函数（修复验证部分）
+async function stakeTokens() {
+    const amount = parseFloat(document.getElementById('stakeAmount').value);
+
+    // 验证质押数量（修复这一行）
+    if (isNaN(amount) || amount <= 0) {
+        alert('请输入有效的质押数量');
+        return;
+    }
+    try {
+        // 显示交易进行中状态
+        const stakeBtn = document.getElementById('stakeBtn');
+        stakeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        stakeBtn.disabled = true;
+        
+        // 获取用户输入的质押数量
+        const amountInput = document.getElementById('stakeAmount');
+        const amountWei = parseEther(amountInput.value);
+        
+        // 验证输入
+        if (isNaN(amount) || amount <= 0) {
+            throw new Error("请输入有效的质押数量");
+        }
+        
+        // 获取智能合约实例
+        const contractAddress = SUPPORTED_NETWORKS[modal.getChainId()].contractAddress; 
+        const contractABI = config.abi; // 替换为实际合约ABI
+
+        // 编码函数数据
+        const data = encodeFunctionData({
+            abi: contractABI,
+            functionName: 'stake', // 根据你 ABI 中函数名修改
+            args: []               // 如果 stake 函数有参数就填这里，如 [amountWei]
+        });
+
+        // 发起交易
+        const chainId = modal.getChainId();
+        const txHash = await sendTransaction({
+            chainId,
+            to: contractAddress,
+            data,
+            value: amountWei,
+            ...wctConfig
+        });
+        console.log('交易成功:', txHash);
+        // 更新余额显示（从链上获取最新余额）
+        const newBalance = await getEthBalance(address);
+        const balanceElement = document.getElementById('ETHbalance');
+        balanceElement.textContent = `${newBalance} ETH`;
+        
+        // 更新质押信息（从智能合约事件或状态读取）
+        const stakedAmount = await stakingContract.getStakedAmount(address);
+        const stakedAmountElement = document.querySelector('.status-value');
+        stakedAmountElement.textContent = `${ethers.formatEther(stakedAmount)} ETH`;
+        
+        // 显示交易成功
+        stakeBtn.innerHTML = '<i class="fas fa-check"></i> Staking Success';
+        stakeBtn.style.background = 'var(--primary)';
+        
+        // 3秒后恢复按钮状态
+        setTimeout(() => {
+            stakeBtn.innerHTML = '<i class="fas fa-lock"></i> Staking';
+            stakeBtn.disabled = false;
+            amountInput.value = '';
+        }, 3000);
+    } catch (error) {
+        console.error('质押失败:', error);
+        
+        // 用户友好的错误消息
+        let errorMessage = "交易失败";
+        if (error.code === "INSUFFICIENT_FUNDS") {
+            errorMessage = "余额不足";
+        } else if (error.code === "ACTION_REJECTED") {
+            errorMessage = "用户拒绝了交易";
+        } else if (error.message.includes("exceeds balance")) {
+            errorMessage = "质押金额超过余额";
+        }
+        
+        alert(`质押失败: ${errorMessage}`);
+        
+        const stakeBtn = document.getElementById('stakeBtn');
+        stakeBtn.innerHTML = '<i class="fas fa-lock"></i> Staking';
+        stakeBtn.disabled = false;
+    }
+}
