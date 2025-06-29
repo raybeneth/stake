@@ -89,12 +89,10 @@ contract ETHStaking is Ownable {
 
     /**
      * @notice 获取用户质押信息
-     * @param user 用户地址
      */
-    function getStakingInfo(address user) public view returns (StakeInfoDTO memory) {
-        (uint256 reward, uint256 total) = calculateReward(user);
-        StakeInfo memory info = stakes[user];
-        
+    function getStakingInfo() public view returns (StakeInfoDTO memory) {
+        (uint256 reward, uint256 total) = calculateReward(msg.sender);
+        StakeInfo memory info = stakes[msg.sender];
         return StakeInfoDTO({
             stakedAmount: info.amount,
             rewardAmount: reward,

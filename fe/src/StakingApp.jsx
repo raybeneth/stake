@@ -6,7 +6,7 @@ import { formatEther } from 'ethers';
 import { JsonRpcProvider } from 'ethers';
 import config from './abi/ETHStaking.json';
 import { parseEther } from 'viem';
-import { writeContract } from '@wagmi/core';
+import { writeContract, readContract } from '@wagmi/core';
 import { useAccount } from 'wagmi';
 import { wagmiConfig } from './wagmi.config';
 
@@ -14,7 +14,15 @@ export const StakingApp = () => {
   const { address } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
-  const [ethBalance, setEthBalance] = useState('0 ETH');
+  // ETH余额
+  const [ethBalance, setEthBalance] = useState('0');
+  // ETH总质押金额加收益
+  const [total, setTotal] = useState('0');
+  // 收益
+  const [earnings, setEarnings] = useState('0');
+  // 总共可提取金额
+  const [canbe, setCanbe] = useState('0');
+  const [extractable, setExtractable] = useState('0');
   const [activeTab, setActiveTab] = useState('stake');
   const [stakeAmount, setStakeAmount] = useState('');
   const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -36,7 +44,7 @@ export const StakingApp = () => {
     },
     rpcUrls: {
       default: {
-        http: ['https://3650-112-10-132-49.ngrok-free.app']
+        http: ['https://c489-112-10-132-49.ngrok-free.app']
       }
     },
     testnet: true
@@ -47,10 +55,10 @@ export const StakingApp = () => {
     31337: {
       name: 'Localhost',
       chainId: 31337,
-      rpcUrl: 'https://3650-112-10-132-49.ngrok-free.app',
+      rpcUrl: 'https://c489-112-10-132-49.ngrok-free.app',
       explorerUrl: 'http://localhost:3000',
       currencySymbol: 'ETH',
-      contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+      contractAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
     },
     11155111: {
       name: 'Ethereum Mainnet',
@@ -115,9 +123,28 @@ export const StakingApp = () => {
         const formattedAddress = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
         setWalletAddress(formattedAddress);
         
+        // 更新钱包余额
         const balance = await getEthBalance(address);
         setEthBalance(`${balance} ETH`);
         localStorage.setItem('walletAddress', address);
+        // 更新合约中的质押金额
+        const chainId = await modalRef.current.getChainId();
+        if (!SUPPORTED_NETWORKS[chainId]) {
+          throw new Error(`不支持的链ID: ${chainId}`);
+        }
+        const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
+        // 请求合约数据
+        const result = await readContract(wagmiConfig, {
+          abi: config.abi,
+          address: contractAddress,
+          functionName: 'getStakingInfo',
+          args: []
+        });
+        console.log('合约数据:', result);
+        setTotal(`${formatEther(result.totalAmount ? result.totalAmount : 0)}`);
+        setEarnings(`${formatEther(result.rewardAmount ? result.rewardAmount : 0)}`);
+        setCanbe(`${formatEther(result.stakedAmount ? result.stakedAmount : 0)}`);
+        setExtractable(`${formatEther(result.totalAmount ? result.totalAmount : 0)}`);
       } else {
         setWalletConnected(false);
         setWalletAddress('');
@@ -292,14 +319,14 @@ export const StakingApp = () => {
           </div>
           <div className="video-container">
             <video className="promo-video" autoPlay loop muted playsInline>
-              <source src="https://web3.okx.com/cdn/assets/files/241/57C1258631DC562B.mp4" type="video/mp4" />
+              <source src="/videos/57C1258631DC562B.mp4" type="video/mp4" />
             </video>
           </div>
         </div>
         {/* 移动端视频 */}
         <div className="mobile-video-container">
           <video className="promo-video" autoPlay loop muted playsInline>
-            <source src="https://web3.okx.com/cdn/assets/files/241/57C1258631DC562B.mp4" type="video/mp4" />
+            <source src="/videos/57C1258631DC562B.mp4" type="video/mp4" />
           </video>
         </div>
         {/* 移动端宣传语 */}
@@ -383,21 +410,21 @@ export const StakingApp = () => {
               <div className="status-info">
                 <div className="status-item">
                   <span className="status-label">Total amount of pledge</span>
-                  <span className="status-value">850.25 ETH</span>
+                  <span className="status-value">{total} ETH</span>
                 </div>
                 <div className="status-item">
                   <span className="status-label">Earnings to be withdrawn</span>
-                  <span className="status-value primary">12.63 ETH</span>
+                  <span className="status-value primary">{earnings} ETH</span>
                 </div>
                 <div className="status-item">
                   <span className="status-label">The pledge can be withdrawn</span>
-                  <span className="status-value">500.00 ETH</span>
+                  <span className="status-value">{canbe} ETH</span>
                 </div>
               </div>
               <div className="input-group">
                 <div className="input-label">
                   <span>Extraction quantity</span>
-                  <span>Extractable: <span className="balance">512.63 ETH</span></span>
+                  <span>Extractable: <span className="balance">{extractable} ETH</span></span>
                 </div>
                 <div className="input-container">
                   <input 
