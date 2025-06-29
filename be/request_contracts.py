@@ -3,7 +3,7 @@ from web3 import Web3
 from web3.exceptions import TransactionNotFound
 
 # 1. 连接到本地 Hardhat 节点
-LOCAL_RPC_URL = "https://b224-112-10-132-186.ngrok-free.app"
+LOCAL_RPC_URL = "https://3650-112-10-132-49.ngrok-free.app"
 w3 = Web3(Web3.HTTPProvider(LOCAL_RPC_URL))
 
 # 确保连接成功
