@@ -58,7 +58,7 @@ export const StakingApp = () => {
       rpcUrl: 'https://c489-112-10-132-49.ngrok-free.app',
       explorerUrl: 'http://localhost:3000',
       currencySymbol: 'ETH',
-      contractAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+      contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
     },
     11155111: {
       name: 'Ethereum Mainnet',
@@ -134,11 +134,13 @@ export const StakingApp = () => {
         }
         const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
         // 请求合约数据
+        console.log(`请求合约地址: ${contractAddress} with chainId`, chainId, 'and ABI', config.abi, 'and address', address);
         const result = await readContract(wagmiConfig, {
           abi: config.abi,
           address: contractAddress,
           functionName: 'getStakingInfo',
-          args: []
+          args: [],
+          account: address
         });
         console.log('合约数据:', result);
         setTotal(`${formatEther(result.totalAmount ? result.totalAmount : 0)}`);
@@ -251,8 +253,9 @@ export const StakingApp = () => {
       console.log('交易成功:', result);
       
       // 更新余额显示
-      const newBalance = await getEthBalance(address);
-      setEthBalance(`${newBalance} ETH`);
+      // const newBalance = await getEthBalance(address);
+      // setEthBalance(`${newBalance} ETH`);
+      updateWalletDisplay();
       
       alert('质押成功！');
       setStakeAmount('');
