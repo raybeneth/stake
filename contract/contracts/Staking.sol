@@ -9,7 +9,6 @@ contract ETHStaking is Ownable {
     
     // 质押信息结构体
     struct StakeInfo {
-        bool exists;       // 是否存在
         uint256 amount;    // 质押金额
         uint256 startTime; // 质押开始区块时间
     }
@@ -22,7 +21,7 @@ contract ETHStaking is Ownable {
     }
 
     event Staked(address indexed user, uint256 amount, uint256 timestamp);
-    event Withdrawn(address indexed ownwe, uint256 amount, uint256 timestamp);
+    event Withdrawn(address indexed owner, uint256 amount, uint256 timestamp);
 
     constructor() Ownable(msg.sender) {}
 
@@ -33,13 +32,12 @@ contract ETHStaking is Ownable {
         require(msg.value > 0, "Cannot stake 0 ETH");
         // 指向存储
         StakeInfo storage info = stakes[msg.sender];
-        if (info.exists) {
+        if (info.amount > 0) {
             // 更新现有质押
             info.amount = info.amount + msg.value;
         } else {
             // 创建新质押
             stakes[msg.sender] = StakeInfo({
-                exists: true,
                 amount: msg.value,
                 startTime: block.timestamp
             });
@@ -52,10 +50,7 @@ contract ETHStaking is Ownable {
      */
     function withdraw() external onlyOwner {
         uint256 balance = address(this).balance;
-        // 留点手续费
-        if (balance < 0.05 ether) {
-            return;
-        }
+        require(balance > 0, "No ETH to withdraw");
         payable(owner()).transfer(balance);
         emit Withdrawn(owner(), balance, block.timestamp);
     }
@@ -68,7 +63,7 @@ contract ETHStaking is Ownable {
      */
     function calculateReward(address user) public view returns (uint256 reward, uint256 total) {
         StakeInfo memory info = stakes[user];
-        if (!info.exists) return (0, 0);
+        if (info.amount == 0) return (0, 0);
         uint256 effectiveDays = (block.timestamp - info.startTime) / 86400;
         
         // 每日0.5%利率 (0.5% = 5/1000)
@@ -80,8 +75,15 @@ contract ETHStaking is Ownable {
      * @notice 获取用户质押信息
      */
     function getStakingInfo() public view returns (StakeInfoDTO memory) {
-        (uint256 reward, uint256 total) = calculateReward(msg.sender);
         StakeInfo memory info = stakes[msg.sender];
+        if (info.amount == 0) {
+            return StakeInfoDTO({
+                stakedAmount: 0,
+                rewardAmount: 0,
+                totalAmount: 0
+            });
+        }
+        (uint256 reward, uint256 total) = calculateReward(msg.sender);
         return StakeInfoDTO({
             stakedAmount: info.amount,
             rewardAmount: reward,
