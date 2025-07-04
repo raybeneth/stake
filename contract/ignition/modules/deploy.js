@@ -1,9 +1,9 @@
 const hre = require("hardhat");
 
 async function main() {
-    const ownerAddress = '';
+    // const ownerAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const factory = await hre.ethers.getContractFactory("ETHStaking");
-    const contract = await factory.deploy(ownerAddress);
+    const contract = await factory.deploy();
     await contract.waitForDeployment();
     console.log(`合约已部署到: ${contract.target}`);
 }

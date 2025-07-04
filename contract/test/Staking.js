@@ -2,7 +2,7 @@ const hre = require("hardhat");
 
 async function main() {
   // 替换为你部署的合约地址
-  const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const { ethers } = hre;
 
   // 获取合约余额（单位是 wei）
@@ -19,13 +19,12 @@ async function main() {
 async function getContractBalance() {
   const { ethers, hre } = require("hardhat"); // 确保引入 hardhat
 
-  const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
   // ✅ 使用 await 加载合约工厂（包含 ABI）
   const Staking = await ethers.getContractFactory("ETHStaking");
 
   // ✅ 创建只读合约实例
-  // 我想用改地址查询：
   const address = '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC';
   const contract = new ethers.Contract(
     contractAddress,

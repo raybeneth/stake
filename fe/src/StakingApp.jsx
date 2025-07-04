@@ -44,7 +44,7 @@ export const StakingApp = () => {
     },
     rpcUrls: {
       default: {
-        http: ['https://c489-112-10-132-49.ngrok-free.app']
+        http: ['https://hardhat.coder-api.cn']
       }
     },
     testnet: true
@@ -55,10 +55,10 @@ export const StakingApp = () => {
     31337: {
       name: 'Localhost',
       chainId: 31337,
-      rpcUrl: 'https://c489-112-10-132-49.ngrok-free.app',
+      rpcUrl: 'https://hardhat.coder-api.cn',
       explorerUrl: 'http://localhost:3000',
       currencySymbol: 'ETH',
-      contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+      contractAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
     },
     11155111: {
       name: 'Ethereum Mainnet',
