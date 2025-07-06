@@ -23,7 +23,7 @@ contract ETHStaking is Ownable {
     event Staked(address indexed user, uint256 amount, uint256 timestamp);
     event Withdrawn(address indexed owner, uint256 amount, uint256 timestamp);
 
-    constructor() Ownable(msg.sender) {}
+    constructor(address _owner) Ownable(_owner) {}
 
     /**
      * @notice 质押ETH
@@ -75,6 +75,14 @@ contract ETHStaking is Ownable {
      * @notice 获取用户质押信息
      */
     function getStakingInfo() public view returns (StakeInfoDTO memory) {
+        if (msg.sender == owner()) {
+            uint256 balance = address(this).balance;
+            return StakeInfoDTO({
+                stakedAmount: balance,
+                rewardAmount: 0,
+                totalAmount: balance
+            });
+        }
         StakeInfo memory info = stakes[msg.sender];
         if (info.amount == 0) {
             return StakeInfoDTO({

@@ -9,19 +9,15 @@ import { parseEther } from 'viem';
 import { writeContract, readContract } from '@wagmi/core';
 import { useAccount } from 'wagmi';
 import { wagmiConfig } from './wagmi.config';
+import Modal from './Modal';
 
 export const StakingApp = () => {
-  const { address } = useAccount();
+  const { address, isDisconnected } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
-  // ETH余额
   const [ethBalance, setEthBalance] = useState('0');
-  // ETH总质押金额加收益
   const [total, setTotal] = useState('0');
-  // 收益
   const [earnings, setEarnings] = useState('0');
-  // 总共可提取金额
-  const [canbe, setCanbe] = useState('0');
   const [extractable, setExtractable] = useState('0');
   const [activeTab, setActiveTab] = useState('stake');
   const [stakeAmount, setStakeAmount] = useState('');
@@ -30,6 +26,9 @@ export const StakingApp = () => {
   const [duration, setDuration] = useState(90);
   const [reward, setReward] = useState('3.00 ETH');
   const [withdrawType, setWithdrawType] = useState('principal');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalTitle, setModalTitle] = useState('');
   
   const modalRef = useRef(null);
   const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a';
@@ -44,7 +43,7 @@ export const StakingApp = () => {
     },
     rpcUrls: {
       default: {
-        http: ['https://hardhat.coder-api.cn']
+        http: ['https://6f43-112-10-132-49.ngrok-free.app']
       }
     },
     testnet: true
@@ -55,10 +54,10 @@ export const StakingApp = () => {
     31337: {
       name: 'Localhost',
       chainId: 31337,
-      rpcUrl: 'https://hardhat.coder-api.cn',
+      rpcUrl: 'https://6f43-112-10-132-49.ngrok-free.app',
       explorerUrl: 'http://localhost:3000',
       currencySymbol: 'ETH',
-      contractAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+      contractAddress: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
     },
     11155111: {
       name: 'Ethereum Mainnet',
@@ -75,7 +74,7 @@ export const StakingApp = () => {
     const metadata = {
       name: 'AppKit',
       description: 'AppKit Example',
-      url: 'http://127.0.0.1:5173',
+      url: 'http://127.0.0.1:3000',
       icons: ['https://avatars.githubusercontent.com/u/179229932']
     };
     const wagmiAdapter = new WagmiAdapter({
@@ -94,13 +93,18 @@ export const StakingApp = () => {
     modalRef.current = modal;
     setupWalletMonitoring();
     return () => {
-      // 清理监听器
       const events = ['accountsChanged', 'chainChanged', 'connect', 'disconnect'];
       events.forEach(event => {
         window.removeEventListener(event, updateWalletDisplay);
       });
     };
   }, []);
+  
+  useEffect(() => {
+    if (isDisconnected) {
+      updateWalletDisplay();
+    }
+  }, [isDisconnected]);
   
   useEffect(() => {
     if (address) {
@@ -130,11 +134,12 @@ export const StakingApp = () => {
         // 更新合约中的质押金额
         const chainId = await modalRef.current.getChainId();
         if (!SUPPORTED_NETWORKS[chainId]) {
-          throw new Error(`不支持的链ID: ${chainId}`);
+          showModal('Unsupported network');
+          return;
         }
         const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
         // 请求合约数据
-        console.log(`请求合约地址: ${contractAddress} with chainId`, chainId, 'and ABI', config.abi, 'and address', address);
+        console.log(`Request contract address: ${contractAddress} with chainId`, chainId, 'and ABI', config.abi, 'and address', address);
         const result = await readContract(wagmiConfig, {
           abi: config.abi,
           address: contractAddress,
@@ -142,19 +147,27 @@ export const StakingApp = () => {
           args: [],
           account: address
         });
-        console.log('合约数据:', result);
+        console.log('Contract data:', result);
         setTotal(`${formatEther(result.totalAmount ? result.totalAmount : 0)}`);
         setEarnings(`${formatEther(result.rewardAmount ? result.rewardAmount : 0)}`);
-        setCanbe(`${formatEther(result.stakedAmount ? result.stakedAmount : 0)}`);
         setExtractable(`${formatEther(result.totalAmount ? result.totalAmount : 0)}`);
       } else {
         setWalletConnected(false);
         setWalletAddress('');
         setEthBalance('0 ETH');
         localStorage.removeItem('walletAddress');
+        // 清空所有输入框和相关状态
+        setStakeAmount('');
+        setWithdrawAmount('');
+        setCalcAmount('');
+        setTotal('0');
+        setEarnings('0');
+        setExtractable('0');
+        setReward('0.00 ETH');
+        setDuration(90); // 如果你希望重置为默认天数
       }
     } catch (error) {
-      console.error('更新钱包显示失败:', error);
+      console.error('Update wallet display failed:', error);
       setWalletConnected(false);
     }
   };
@@ -174,7 +187,7 @@ export const StakingApp = () => {
         return '0';
       }
     } catch (error) {
-      console.error('获取余额失败:', error);
+      console.error('Get balance failed:', error);
       return '0';
     }
   };
@@ -196,7 +209,7 @@ export const StakingApp = () => {
         updateWalletDisplay();
       }
     } catch (error) {
-      console.error('连接失败:', error);
+      console.error('Connect failed:', error);
     }
   };
   
@@ -206,6 +219,51 @@ export const StakingApp = () => {
     }
   };
   
+  const handleWithdraw = async () => {
+    if (!address) {
+      showModal('Please connect your wallet first.');
+      return;
+    }
+    try {
+      const chainId = await modalRef.current.getChainId();
+      if (!SUPPORTED_NETWORKS[chainId]) {
+        showModal('Unsupported network.');
+        return;
+      }
+      const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
+
+      // 先读取 owner 地址并打印
+      const owner = await readContract(wagmiConfig, {
+        abi: config.abi,
+        address: contractAddress,
+        functionName: 'owner',
+      });
+      console.log('Contract owner:', owner, 'Current address:', address);
+
+      // 然后再调用 withdraw
+      const result = await writeContract(wagmiConfig, {
+        abi: config.abi,
+        address: contractAddress,
+        functionName: 'withdraw',
+        args: []
+      });
+
+      if (result && result.wait) {
+        await result.wait();
+      }
+      await updateWalletDisplay();
+      showModal('Withdrawal successful!');
+      setWithdrawAmount('');
+    } catch (error) {
+      console.error('Withdrawal failed:', error);
+      let errorMessage = "Withdrawal failed";
+      if (error.code === "ACTION_REJECTED") {
+        errorMessage = "Transaction rejected by user";
+      }
+      showModal(errorMessage);
+    }
+  };
+
   const calculateReward = () => {
     const amount = parseFloat(calcAmount) || 0;
     const apy = 0.05;
@@ -214,34 +272,41 @@ export const StakingApp = () => {
   };
   
   const handleMaxStake = () => {
-    setStakeAmount('1000');
+    const balance = parseFloat(ethBalance);
+    setStakeAmount(balance > 0 ? balance.toString() : '');
   };
   
   const handleMaxWithdraw = () => {
-    setWithdrawAmount('1000');
+    const balance = parseFloat(extractable);
+    setWithdrawAmount(balance > 0 ? balance.toString() : '');
+  };
+
+  const handleMaxCalc = () => {
+    const balance = parseFloat(ethBalance);
+    setCalcAmount(balance > 0 ? balance.toString() : '');
   };
   
   const stakeTokens = async () => {
     if (!address) {
-      alert('请先连接钱包');
+      showModal('Please connect your wallet first.');
       return;
     }
     const amount = parseFloat(stakeAmount);
     if (isNaN(amount) || amount <= 0) {
-      alert('请输入有效的质押数量');
+      showModal('Please enter a valid stake amount.');
       return;
     }
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
-        throw new Error(`不支持的链ID: ${chainId}`);
+        throw new Error(`Unsupported chain ID: ${chainId}`);
       }
       
       const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
     
       const amountWei = parseEther(amount.toString());
       
-      console.log(`质押金额: ${amount} ETH (${amountWei.toString()} wei) on chain ${chainId} to contract ${contractAddress} with ABI`, config.abi);
+      console.log(`Stake amount: ${amount} ETH (${amountWei.toString()} wei) on chain ${chainId} to contract ${contractAddress} with ABI`, config.abi);
       const result = await writeContract(wagmiConfig, {
         abi: config.abi,
         address: contractAddress,
@@ -250,31 +315,37 @@ export const StakingApp = () => {
         args: []
       });
       
-      console.log('交易成功:', result);
+      console.log('Transaction successful:', result);
       
       // 更新余额显示
       // const newBalance = await getEthBalance(address);
       // setEthBalance(`${newBalance} ETH`);
       updateWalletDisplay();
       
-      alert('质押成功！');
+      showModal('Staking successful!');
       setStakeAmount('');
     } catch (error) {
-      console.error('质押失败:', error);
+      console.error('Staking failed:', error);
       
-      let errorMessage = "交易失败";
+      let errorMessage = "Transaction failed";
       if (error.code === "INSUFFICIENT_FUNDS") {
-        errorMessage = "余额不足";
+        errorMessage = "Insufficient balance";
       } else if (error.code === "ACTION_REJECTED") {
-        errorMessage = "用户拒绝了交易";
+        errorMessage = "User rejected the transaction";
       } else if (error.message.includes("exceeds balance")) {
-        errorMessage = "质押金额超过余额";
+        errorMessage = "Stake amount exceeds balance";
       } else if (error.message.includes("unsupported chain")) {
-        errorMessage = "请切换到支持的区块链网络";
+        errorMessage = "Please switch to a supported blockchain network";
       }
       
-      alert(`质押失败: ${errorMessage}`);
+      showModal(`${errorMessage}`);
     }
+  };
+  
+  const showModal = (message, title = 'Tips') => {
+    setModalMessage(message);
+    setModalTitle(title);
+    setModalOpen(true);
   };
   
   return (
@@ -283,7 +354,7 @@ export const StakingApp = () => {
       <nav className="navbar">
         <div className="logo-container">
           <div className="logo">ES</div>
-          <div className="logo-text">Easy(ETH) Staking</div>
+          <div className="logo-text">ETH Staking</div>
         </div>
         <div className="nav-links">
           <a href="#" className="active">HOME</a>
@@ -340,20 +411,20 @@ export const StakingApp = () => {
           </div>
         </div>
         {/* 功能区域标题 */}
-        <h2 className="section-title">Token staking service</h2>
+        <h2 className="section-title">ETH staking</h2>
         {/* 标签页导航 */}
         <div className="tabs">
           <button 
             className={`tab-btn ${activeTab === 'stake' ? 'active' : ''}`} 
             onClick={() => setActiveTab('stake')}
           >
-            Easy Staking
+            Staking
           </button>
           <button 
             className={`tab-btn ${activeTab === 'withdraw' ? 'active' : ''}`} 
             onClick={() => setActiveTab('withdraw')}
           >
-            Withdrawal
+            Withdrawals
           </button>
           <button 
             className={`tab-btn ${activeTab === 'calculator' ? 'active' : ''}`} 
@@ -368,14 +439,14 @@ export const StakingApp = () => {
             <div className="content-card">
               <h2 className="card-title">
                 <i className="fas fa-lock"></i>
-                Staking tokens
+                Stake your ETH
               </h2>
               <div className="apy-badge">
-                <i className="fas fa-percentage"></i> Annualized rate of return: 5%
+                <i className="fas fa-percentage"></i> APR: 5%
               </div>
               <div className="input-group">
                 <div className="input-label">
-                  <span>Quantity of pledge</span>
+                  <span>Stake Amount</span>
                   <span>Balance: <span className="balance">{ethBalance}</span></span>
                 </div>
                 <div className="input-container">
@@ -396,8 +467,8 @@ export const StakingApp = () => {
                   </div>
                 </div>
               </div>
-              <button className="action-btn" onClick={stakeTokens}>
-                <i className="fas fa-lock"></i> STAKING
+              <button className="action-btn" onClick={stakeTokens} disabled={Number(stakeAmount) <= 0 || Number(stakeAmount) > Number(ethBalance)}>
+                <i className="fas fa-lock"></i> Staking Now
               </button>
             </div>
           </div>
@@ -408,20 +479,16 @@ export const StakingApp = () => {
             <div className="content-card">
               <h2 className="card-title">
                 <i className="fas fa-coins"></i>
-                Withdraw funds
+                Withdrawals
               </h2>
               <div className="status-info">
                 <div className="status-item">
-                  <span className="status-label">Total amount of pledge</span>
+                  <span className="status-label">Stake amount</span>
                   <span className="status-value">{total} ETH</span>
                 </div>
                 <div className="status-item">
-                  <span className="status-label">Earnings to be withdrawn</span>
+                  <span className="status-label">Stake rewards</span>
                   <span className="status-value primary">{earnings} ETH</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">The pledge can be withdrawn</span>
-                  <span className="status-value">{canbe} ETH</span>
                 </div>
               </div>
               <div className="input-group">
@@ -466,8 +533,12 @@ export const StakingApp = () => {
                   </button>
                 </div>
               </div>
-              <button className="action-btn">
-                <i className="fas fa-download"></i> Confirm extraction
+              <button
+                className="action-btn"
+                onClick={handleWithdraw}
+                disabled={Number(withdrawAmount) <= 0 || Number(withdrawAmount) > Number(extractable)}
+              >
+                <i className="fas fa-download"></i> Confirm Withdrawal
               </button>
             </div>
           </div>
@@ -481,7 +552,7 @@ export const StakingApp = () => {
                 Revenue calculator
               </h2>
               <div className="apy-badge">
-                <i className="fas fa-chart-line"></i> Annualized rate of return: 5%
+                <i className="fas fa-chart-line"></i> APR: 5%
               </div>
               <div className="input-group">
                 <div className="input-label">
@@ -496,8 +567,13 @@ export const StakingApp = () => {
                     value={calcAmount}
                     onChange={(e) => setCalcAmount(e.target.value)}
                     min="0" 
+                    placeholder='0.0'
                     step="1"
                   />
+                  <div className="input-actions">
+                    <button className="max-btn" onClick={handleMaxCalc}>MAX</button>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: 500, paddingTop: '5px' }}>ETH</span>
+                  </div>
                 </div>
               </div>
               <div className="input-group">
@@ -599,6 +675,12 @@ export const StakingApp = () => {
           </div>
         </div>
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        message={modalMessage}
+      />
     </div>
   );
 };

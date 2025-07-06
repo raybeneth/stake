@@ -270,7 +270,7 @@ body {
     margin-bottom: 30px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    /* gap: 12px; */
 }
 
 .card-title i {
@@ -479,7 +479,7 @@ body {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    /* gap: 15px; */
 }
 
 .faq-question i {
@@ -694,3 +694,95 @@ body {
     border-color: var(--primary);
     color: var(--primary);
 }
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.custom-modal-backdrop {
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  
+  .custom-modal {
+    background: rgba(30, 32, 38, 0.98);
+    color: var(--text-main);
+    border-radius: 18px;
+    padding: 36px 28px 28px 28px;
+    min-width: 300px;
+    max-width: 92vw;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28), 0 1.5px 0 0 var(--primary);
+    text-align: center;
+    border: 1.5px solid #fff; /* 细白色边框 */
+    position: relative;
+    animation: modal-pop 0.22s cubic-bezier(.4,1.6,.6,1) both;
+  }
+  
+  @keyframes modal-pop {
+    0% { transform: scale(0.92); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .custom-modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    color: var(--primary);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(188,255,47,0.08);
+  }
+  
+  .custom-modal-message {
+    font-size: 17px;
+    margin-bottom: 28px;
+    color: #f3f6fa;
+    line-height: 1.7;
+    word-break: break-word;
+  }
+  
+  .custom-modal .action-btn {
+    width: 100%;
+    font-size: 17px;
+    padding: 13px 0;
+    border-radius: 10px;
+    margin-top: 0;
+    background: linear-gradient(90deg, var(--primary) 0%, #fff 100%);
+    color: #222;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(188,255,47,0.08);
+    border: none;
+    transition: background 0.2s;
+  }
+  
+  .custom-modal .action-btn:hover {
+    background: linear-gradient(90deg, #fff 0%, var(--primary) 100%);
+    color: #111;
+  }
+  
+  @media (max-width: 480px) {
+    .custom-modal {
+      padding: 18px 100px 12px 100px;
+      min-width: 0;
+      font-size: 15px;
+    }
+    .custom-modal-title {
+      font-size: 18px;
+    }
+    .custom-modal-message {
+      font-size: 15px;
+    }
+  }

@@ -4,8 +4,8 @@ require("@nomicfoundation/hardhat-toolbox");
 module.exports = {
   solidity: "0.8.28",
   networks: {
-    LOCAL: {
-      url: "https://hardhat.coder-api.cn",
+    dev: {
+      url: "https://6f43-112-10-132-49.ngrok-free.app",
       chainId: 31337,
     },
   },
