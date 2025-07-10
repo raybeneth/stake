@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createAppKit } from '@reown/appkit';
-import { etherlink } from '@reown/appkit/networks';
+import { etherlink, sepolia } from '@reown/appkit/networks';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { formatEther } from 'ethers';
 import { JsonRpcProvider } from 'ethers';
@@ -32,40 +32,40 @@ export const StakingApp = () => {
   
   const modalRef = useRef(null);
   const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a';
-  const hardhat = {
-    id: 31337,
-    name: 'Hardhat',
-    network: 'hardhat',
-    nativeCurrency: {
-      name: 'ETH',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: {
-      default: {
-        http: ['https://6f43-112-10-132-49.ngrok-free.app']
-      }
-    },
-    testnet: true
-  };
-  const networks = [etherlink, hardhat];
+  // const hardhat = {
+  //   id: 31337,
+  //   name: 'Hardhat',
+  //   network: 'hardhat',
+  //   nativeCurrency: {
+  //     name: 'ETH',
+  //     symbol: 'ETH',
+  //     decimals: 18
+  //   },
+  //   rpcUrls: {
+  //     default: {
+  //       http: ['https://6f43-112-10-132-49.ngrok-free.app']
+  //     }
+  //   },
+  //   testnet: true
+  // };
+  const networks = [sepolia, etherlink];
   
   const SUPPORTED_NETWORKS = {
-    31337: {
-      name: 'Localhost',
-      chainId: 31337,
-      rpcUrl: 'https://6f43-112-10-132-49.ngrok-free.app',
-      explorerUrl: 'http://localhost:3000',
-      currencySymbol: 'ETH',
-      contractAddress: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
-    },
+    // 31337: {
+    //   name: 'Localhost',
+    //   chainId: 31337,
+    //   rpcUrl: 'https://6f43-112-10-132-49.ngrok-free.app',
+    //   explorerUrl: 'http://localhost:3000',
+    //   currencySymbol: 'ETH',
+    //   contractAddress: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+    // },
     11155111: {
       name: 'Ethereum Mainnet',
       chainId: 11155111,
-      rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
-      explorerUrl: 'https://etherscan.io',
-      currencySymbol: 'ETH',
-      contractAddress: '0x...'
+      rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/v_M5F7Wmq6bElNsaxQYnt',
+      explorerUrl: 'https://sepolia.etherscan.io',
+      currencySymbol: 'SepoliaETH',
+      contractAddress: '0xf3fa0885c549B996EaDcEB81D86b75648b0c4A60'
     }
   };
   

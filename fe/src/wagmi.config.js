@@ -1,11 +1,11 @@
 import { createConfig, http } from 'wagmi'
-import { hardhat } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { walletConnect } from 'wagmi/connectors'
 
 const wagmiConfig = createConfig({
-  chains: [hardhat],
+  chains: [sepolia],
   transports: {
-    [hardhat.id]: http(), // 或你的本地节点URL
+    [sepolia.id]: http(), // 或你的本地节点URL
   },
   connectors: [
     walletConnect({
