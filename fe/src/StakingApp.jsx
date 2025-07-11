@@ -48,7 +48,7 @@ export const StakingApp = () => {
   //   },
   //   testnet: true
   // };
-  const networks = [sepolia, etherlink];
+  const networks = [sepolia];
   
   const SUPPORTED_NETWORKS = {
     // 31337: {
@@ -117,7 +117,16 @@ export const StakingApp = () => {
   }, [calcAmount, duration]);
   
   const getJSONRpcProvider = (chainId) => {
-    return new JsonRpcProvider(SUPPORTED_NETWORKS[chainId].rpcUrl);
+    const network = SUPPORTED_NETWORKS[chainId];
+    if (network) {
+      return new JsonRpcProvider(network.rpcUrl);
+    }
+    // 调用appkit的组件的弹框切换网络
+    if (modalRef.current) {
+      // 打开网络切换弹框，只显示 Sepolia 网络
+      modalRef.current.open();
+    }
+    return null;
   };
   
   const updateWalletDisplay = async () => {
@@ -134,8 +143,14 @@ export const StakingApp = () => {
         // 更新合约中的质押金额
         const chainId = await modalRef.current.getChainId();
         if (!SUPPORTED_NETWORKS[chainId]) {
-          showModal('Unsupported network');
-          return;
+          try{
+            await modalRef.current.switchChain(11155111);
+            updateWalletDisplay();
+          }catch(Error) {
+            // 如果自动切换失败，打开网络切换弹框
+            modalRef.current.open();
+            return;
+          }
         }
         const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
         // 请求合约数据
@@ -164,7 +179,7 @@ export const StakingApp = () => {
         setEarnings('0');
         setExtractable('0');
         setReward('0.00 ETH');
-        setDuration(90); // 如果你希望重置为默认天数
+        setDuration(90);
       }
     } catch (error) {
       console.error('Update wallet display failed:', error);
@@ -227,8 +242,23 @@ export const StakingApp = () => {
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
-        showModal('Unsupported network.');
-        return;
+        // 尝试自动切换到 Sepolia 网络
+        try {
+          await modalRef.current.switchChain(11155111);
+          // 重新获取链ID
+          const newChainId = await modalRef.current.getChainId();
+          if (!SUPPORTED_NETWORKS[newChainId]) {
+            // 如果仍然不支持，打开网络切换弹框
+            modalRef.current.open();
+            showModal('Please switch to Sepolia network.');
+            return;
+          }
+        } catch (switchError) {
+          // 如果自动切换失败，打开网络切换弹框
+          modalRef.current.open();
+          showModal('Please switch to Sepolia network.');
+          return;
+        }
       }
       const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
 
@@ -251,8 +281,9 @@ export const StakingApp = () => {
       if (result && result.wait) {
         await result.wait();
       }
-      await updateWalletDisplay();
+      // 更新钱包余额和合约信息
       showModal('Withdrawal successful!');
+      await updateWalletDisplay();
       setWithdrawAmount('');
     } catch (error) {
       console.error('Withdrawal failed:', error);
@@ -299,7 +330,22 @@ export const StakingApp = () => {
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
-        throw new Error(`Unsupported chain ID: ${chainId}`);
+        console.log('Current chainId is ', chainId);
+        // 尝试自动切换到 Sepolia 网络
+        try {
+          await modalRef.current.switchChain(11155111);
+          // 重新获取链ID
+          const newChainId = await modalRef.current.getChainId();
+          if (!SUPPORTED_NETWORKS[newChainId]) {
+            // 如果仍然不支持，打开网络切换弹框
+            modalRef.current.open();
+            throw new Error('Please switch to Sepolia network');
+          }
+        } catch (switchError) {
+          // 如果自动切换失败，打开网络切换弹框
+          modalRef.current.open();
+          throw new Error('Please switch to Sepolia network');
+        }
       }
       
       const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
@@ -317,10 +363,8 @@ export const StakingApp = () => {
       
       console.log('Transaction successful:', result);
       
-      // 更新余额显示
-      // const newBalance = await getEthBalance(address);
-      // setEthBalance(`${newBalance} ETH`);
-      updateWalletDisplay();
+      // 更新钱包余额和合约信息
+      await updateWalletDisplay();
       
       showModal('Staking successful!');
       setStakeAmount('');
