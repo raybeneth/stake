@@ -398,7 +398,7 @@ export const StakingApp = () => {
       <nav className="navbar">
         <div className="logo-container">
           <img src="/eth-favicon.svg" alt="ETH Staking Logo" className="logo-icon" />
-          <div className="logo-text">ETH Staking</div>
+          <div className="logo-text">Liqeth Staking</div>
         </div>
         <div className="nav-links">
           <a href="#" className="active">HOME</a>
