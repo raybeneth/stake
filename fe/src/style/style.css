@@ -7,18 +7,19 @@
 
 :root {
     --primary: #bcff2f;
-    --bg-dark: #000000;
-    --bg-card: #1a1a1a;
+    --bg-dark: #0d1117;
+    --bg-card: #161b22;
     --bg-input: #0d0d0d;
     --text-main: #ffffff;
     --text-secondary: #9ba4b5;
-    --border: rgba(255, 255, 255, 0.1);
+    --border: #30363d;
     --success: #bcff2f;
     --error: #ff3a57;
 }
 
 body {
-    background: var(--bg-dark);
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(ellipse at top, rgba(188, 255, 47, 0.05), transparent 40%);
     color: var(--text-main);
     min-height: 100vh;
     padding: 0;
@@ -66,10 +67,22 @@ body {
     font-size: 18px;
 }
 
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.logo-container:hover .logo-icon {
+    transform: rotate(360deg) scale(1.1);
+}
+
 .logo-text {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: var(--text-main);
+    background: linear-gradient(90deg, var(--primary) 0%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .nav-links {
@@ -251,6 +264,7 @@ body {
 .tab-btn.active {
     background: rgba(188, 255, 47, 0.1);
     color: var(--primary);
+    box-shadow: 0 0 15px rgba(188, 255, 47, 0.2);
 }
 
 /* 内容卡片 */
@@ -262,6 +276,13 @@ body {
     max-width: 600px;
     margin: 0 auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-top: 3px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(188, 255, 47, 0.1);
 }
 
 .card-title {
@@ -359,7 +380,7 @@ body {
 /* 操作按钮 */
 .action-btn {
     width: 100%;
-    background: var(--primary);
+    background: linear-gradient(45deg, var(--primary), #a8e029);
     color: var(--bg-dark);
     border: none;
     padding: 18px;
@@ -373,15 +394,16 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    box-shadow: 0 4px 15px rgba(188, 255, 47, 0.2);
 }
 
 .action-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(188, 255, 47, 0.3);
+    box-shadow: 0 6px 20px rgba(188, 255, 47, 0.4);
 }
 
 .action-btn:disabled {
-    background: #495266;
+    background: #2a3038;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
