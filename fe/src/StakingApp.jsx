@@ -48,7 +48,7 @@ export const StakingApp = () => {
   //   },
   //   testnet: true
   // };
-  const networks = [sepolia];
+  const networks = [sepolia, etherlink];
   
   const SUPPORTED_NETWORKS = {
     // 31337: {
@@ -117,16 +117,7 @@ export const StakingApp = () => {
   }, [calcAmount, duration]);
   
   const getJSONRpcProvider = (chainId) => {
-    const network = SUPPORTED_NETWORKS[chainId];
-    if (network) {
-      return new JsonRpcProvider(network.rpcUrl);
-    }
-    // 调用appkit的组件的弹框切换网络
-    if (modalRef.current) {
-      // 打开网络切换弹框，只显示 Sepolia 网络
-      modalRef.current.open();
-    }
-    return null;
+    return new JsonRpcProvider(SUPPORTED_NETWORKS[chainId].rpcUrl);
   };
   
   const updateWalletDisplay = async () => {
@@ -143,14 +134,8 @@ export const StakingApp = () => {
         // 更新合约中的质押金额
         const chainId = await modalRef.current.getChainId();
         if (!SUPPORTED_NETWORKS[chainId]) {
-          try{
-            await modalRef.current.switchChain(11155111);
-            updateWalletDisplay();
-          }catch(Error) {
-            // 如果自动切换失败，打开网络切换弹框
-            modalRef.current.open();
-            return;
-          }
+          showModal('Unsupported network');
+          return;
         }
         const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
         // 请求合约数据
@@ -179,7 +164,7 @@ export const StakingApp = () => {
         setEarnings('0');
         setExtractable('0');
         setReward('0.00 ETH');
-        setDuration(90);
+        setDuration(90); // 如果你希望重置为默认天数
       }
     } catch (error) {
       console.error('Update wallet display failed:', error);
@@ -242,23 +227,8 @@ export const StakingApp = () => {
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
-        // 尝试自动切换到 Sepolia 网络
-        try {
-          await modalRef.current.switchChain(11155111);
-          // 重新获取链ID
-          const newChainId = await modalRef.current.getChainId();
-          if (!SUPPORTED_NETWORKS[newChainId]) {
-            // 如果仍然不支持，打开网络切换弹框
-            modalRef.current.open();
-            showModal('Please switch to Sepolia network.');
-            return;
-          }
-        } catch (switchError) {
-          // 如果自动切换失败，打开网络切换弹框
-          modalRef.current.open();
-          showModal('Please switch to Sepolia network.');
-          return;
-        }
+        showModal('Unsupported network.');
+        return;
       }
       const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
 
@@ -281,9 +251,8 @@ export const StakingApp = () => {
       if (result && result.wait) {
         await result.wait();
       }
-      // 更新钱包余额和合约信息
-      showModal('Withdrawal successful!');
       await updateWalletDisplay();
+      showModal('Withdrawal successful!');
       setWithdrawAmount('');
     } catch (error) {
       console.error('Withdrawal failed:', error);
@@ -330,22 +299,7 @@ export const StakingApp = () => {
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
-        console.log('Current chainId is ', chainId);
-        // 尝试自动切换到 Sepolia 网络
-        try {
-          await modalRef.current.switchChain(11155111);
-          // 重新获取链ID
-          const newChainId = await modalRef.current.getChainId();
-          if (!SUPPORTED_NETWORKS[newChainId]) {
-            // 如果仍然不支持，打开网络切换弹框
-            modalRef.current.open();
-            throw new Error('Please switch to Sepolia network');
-          }
-        } catch (switchError) {
-          // 如果自动切换失败，打开网络切换弹框
-          modalRef.current.open();
-          throw new Error('Please switch to Sepolia network');
-        }
+        throw new Error(`Unsupported chain ID: ${chainId}`);
       }
       
       const contractAddress = SUPPORTED_NETWORKS[chainId].contractAddress;
@@ -363,8 +317,10 @@ export const StakingApp = () => {
       
       console.log('Transaction successful:', result);
       
-      // 更新钱包余额和合约信息
-      await updateWalletDisplay();
+      // 更新余额显示
+      // const newBalance = await getEthBalance(address);
+      // setEthBalance(`${newBalance} ETH`);
+      updateWalletDisplay();
       
       showModal('Staking successful!');
       setStakeAmount('');
@@ -420,19 +376,16 @@ export const StakingApp = () => {
         {/* PC端顶部横幅 */}
         <div className="top-banner">
           <div className="slogan-container">
-            <div className="slogan">A safe and efficient token staking solution</div>
-            <div className="slogan-subtext">
-              Our platform offers an industry-leading annualized rate of return of 5%, ensuring the security of funds
-              through blockchain technology and achieving stable asset appreciation.
-              Zero transaction fees, real-time returns, and flexible access provide the best value-added solution for
-              your digital assets.
-            </div>
+            <div className="slogan">Liqeth maximizes the returns on your Ether staking</div>
+            <div className="slogan-subtext">What can Liqeth do for you?</div>
+            <div className="slogan-subtext">Professional node</div>
+            <div className="slogan-subtext">The lowest and most extreme handling fees</div>
+            <div className="slogan-subtext">More profits</div>
+            <div className="slogan-subtext">Liquidity bet</div>
             <div className="slogan-features">
-              <div className="feature-tag">5% annualized return</div>
-              <div className="feature-tag">Zero handling fee</div>
-              <div className="feature-tag">Real-time revenue</div>
-              <div className="feature-tag">Safe and reliable</div>
-              <div className="feature-tag">Flexible access</div>
+              <div className="feature-tag">APR: %5</div>
+              <div className="feature-tag">Zero transaction fee</div>
+              <div className="feature-tag">High return</div>
             </div>
           </div>
           <div className="video-container">
@@ -449,9 +402,9 @@ export const StakingApp = () => {
         </div>
         {/* 移动端宣传语 */}
         <div className="mobile-slogan-container">
-          <div className="slogan">A safe and efficient token staking solution</div>
+          <div className="slogan">Liqeth maximizes the returns on your Ether staking</div>
           <div className="slogan-subtext" style={{ marginTop: '15px' }}>
-            5% annualized return · Zero transaction fees · Real-time returns · Safe and reliable · Flexible access
+            APR: %5 · Zero transaction fees · High return
           </div>
         </div>
         {/* 功能区域标题 */}
