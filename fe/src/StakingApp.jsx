@@ -364,7 +364,7 @@ export const StakingApp = () => {
           </video>
         </div>
         <div className="mobile-slogan-container">
-          <div className="slogan">Liqeth maximizes the returns on your Ether staking</div>
+          <div className="slogan"><span className="li-qeth-logo">Liqeth</span> maximizes the returns on your Ether staking</div>
           <div className="slogan-subtext" style={{ marginTop: '15px' }}>
             APR: %5 · Zero transaction fees · High return
           </div>
