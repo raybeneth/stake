@@ -11,6 +11,7 @@ import { useAccount } from 'wagmi';
 import { wagmiConfig } from './wagmi.config';
 import Modal from './Modal';
 
+
 export const StakingApp = () => {
   const { address, isDisconnected } = useAccount();
   const [walletConnected, setWalletConnected] = useState(false);
@@ -29,6 +30,8 @@ export const StakingApp = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
+  const [isStaking, setIsStaking] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
   
   const modalRef = useRef(null);
   const projectId = 'bc8f2a1b3cd268f8295dd93917c4173a';
@@ -194,6 +197,9 @@ export const StakingApp = () => {
       showModal('Please connect your wallet first.');
       return;
     }
+    
+    setIsWithdrawing(true); // 开始加载状态
+    
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
@@ -229,6 +235,8 @@ export const StakingApp = () => {
         errorMessage = "Transaction rejected by user";
       }
       showModal(errorMessage);
+    } finally {
+      setIsWithdrawing(false); // 结束加载状态
     }
   };
 
@@ -264,6 +272,9 @@ export const StakingApp = () => {
       showModal('Please enter a valid stake amount.');
       return;
     }
+    
+    setIsStaking(true); // 开始加载状态
+    
     try {
       const chainId = await modalRef.current.getChainId();
       if (!SUPPORTED_NETWORKS[chainId]) {
@@ -304,6 +315,8 @@ export const StakingApp = () => {
       }
       
       showModal(`${errorMessage}`);
+    } finally {
+      setIsStaking(false); // 结束加载状态
     }
   };
   
@@ -317,8 +330,8 @@ export const StakingApp = () => {
     <div>
       <nav className="navbar">
         <div className="logo-container">
-          <img src="/eth-favicon.svg" alt="ETH Staking Logo" className="logo-icon" />
-          <div className="logo-text">Liqeth Staking</div>
+          <img src="/ethereum.svg" alt="ETH Staking Logo" className="logo-icon" />
+          <div className="logo-text">Etherspool</div>
         </div>
         <div className="nav-links">
           <a href="#" className="active">HOME</a>
@@ -339,32 +352,44 @@ export const StakingApp = () => {
       <div className="container">
         <div className="top-banner">
           <div className="slogan-container">
-            <div className="slogan"><span className="li-qeth-logo">Liqeth</span> maximizes the returns on your Ether staking</div>
-            <div className="slogan-subtext">What can Liqeth do for you?</div>
-            <div className="slogan-subtext">Professional node</div>
-            <div className="slogan-subtext">The lowest and most extreme handling fees</div>
-            <div className="slogan-subtext">More profits</div>
-            <div className="slogan-subtext">Liquidity bet</div>
-            <div className="slogan-features">
+            <div className="slogan"><span className="li-qeth-logo">Mine new Ether</span>Mine the Future of Finance</div>
+            <div className="slogan-subtext">
+            Participate in the Ethereum network's consensus mechanism to validate transactions and earn newly minted Ether. While Ethereum has transitioned to Proof-of-Stake (staking), the spirit of mining lives on—secure the network, contribute to decentralization, and be rewarded for your participation.
+            </div>
+            {/* <div className="slogan-features">
               <div className="feature-tag">APR: %5</div>
               <div className="feature-tag">Zero transaction fee</div>
               <div className="feature-tag">High return</div>
-              <div className="feature-tag">OKX</div>
-            </div>
+            </div> */}
           </div>
           <div className="video-container">
-            <video className="promo-video" autoPlay loop muted playsInline>
-              <source src="/videos/57C1258631DC562B.mp4" type="video/mp4" />
-            </video>
+            <img className="promo-image spin-3d" src="/ethereum-mining.svg" alt="ETH Staking" />
           </div>
         </div>
+
+        <div className="top-banner">
+          <div className="video-container">
+            <img className="promo-image spin-3d" src="/ethereum-wallet.svg" alt="ETH Staking" />
+          </div>
+          <div className="slogan-container">
+            <div className="slogan"><span className="li-qeth-logo">Secure hosting</span> Your Assets, Fort Knox-Secure</div>
+            <div className="slogan-subtext">
+            Trust in enterprise-grade custody solutions. Our secure platform combines cutting-edge encryption, multi-signature technology, and cold storage to protect your digital assets 24/7. Experience peace of mind knowing your Ether is safeguarded with military-grade security.
+            </div>
+            {/* <div className="slogan-features">
+              <div className="feature-tag">APR: %5</div>
+              <div className="feature-tag">Zero transaction fee</div>
+              <div className="feature-tag">High return</div>
+            </div> */}
+          </div>
+        </div>
+
+
         <div className="mobile-video-container">
-          <video className="promo-video" autoPlay loop muted playsInline>
-            <source src="/videos/57C1258631DC562B.mp4" type="video/mp4" />
-          </video>
+          <img className="promo-image" src="/ethereum-mining.svg" alt="ETH Staking" />
         </div>
         <div className="mobile-slogan-container">
-          <div className="slogan"><span className="li-qeth-logo">Liqeth</span> maximizes the returns on your Ether staking</div>
+          <div className="slogan"><span className="li-qeth-logo">Mine new Ether</span>Mine the Future of Finance</div>
           <div className="slogan-subtext" style={{ marginTop: '15px' }}>
             APR: %5 · Zero transaction fees · High return
           </div>
@@ -423,8 +448,21 @@ export const StakingApp = () => {
                   </div>
                 </div>
               </div>
-              <button className="action-btn" onClick={stakeTokens} disabled={Number(stakeAmount) <= 0 || Number(stakeAmount) > Number(ethBalance)}>
-                <i className="fas fa-lock"></i> Staking Now
+              <button 
+                className="action-btn" 
+                onClick={stakeTokens} 
+                disabled={Number(stakeAmount) <= 0 || Number(stakeAmount) > Number(ethBalance) || isStaking}
+              >
+                {isStaking ? (
+                  <>
+                    <div className="loading-spinner"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-lock"></i> Staking Now
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -491,9 +529,18 @@ export const StakingApp = () => {
               <button
                 className="action-btn"
                 onClick={handleWithdraw}
-                disabled={Number(withdrawAmount) <= 0 || Number(withdrawAmount) > Number(extractable)}
+                disabled={Number(withdrawAmount) <= 0 || Number(withdrawAmount) > Number(extractable) || isWithdrawing}
               >
-                <i className="fas fa-download"></i> Confirm Withdrawal
+                {isWithdrawing ? (
+                  <>
+                    <div className="loading-spinner"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-download"></i> Confirm Withdrawal
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -563,18 +610,7 @@ export const StakingApp = () => {
           <div className="faq-container">
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 How long does it take to pledge?
               </div>
               <div className="faq-answer">
@@ -585,18 +621,7 @@ export const StakingApp = () => {
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 How are the earnings calculated and distributed?
               </div>
               <div className="faq-answer">
@@ -607,18 +632,7 @@ export const StakingApp = () => {
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 How long does it take to withdraw the funds?
               </div>
               <div className="faq-answer">
@@ -629,18 +643,7 @@ export const StakingApp = () => {
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 Is there a minimum pledge amount?
               </div>
               <div className="faq-answer">
@@ -650,18 +653,7 @@ export const StakingApp = () => {
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 Does the platform charge a handling fee?
               </div>
               <div className="faq-answer">
@@ -671,18 +663,7 @@ export const StakingApp = () => {
             </div>
             <div className="faq-item">
               <div className="faq-question">
-                <span className="faq-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="url(#faq-gradient)" stroke="#5f8eff" strokeWidth="2"/>
-                    <path d="M12 16v-1m0-6a2 2 0 0 1 2 2c0 1-2 1.5-2 3" stroke="#5f8eff" strokeWidth="2" strokeLinecap="round"/>
-                    <defs>
-                      <linearGradient id="faq-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#6a5af9"/>
-                        <stop offset="1" stopColor="#5f8eff"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </span>
+                
                 How to ensure the safety of funds?
               </div>
               <div className="faq-answer">
