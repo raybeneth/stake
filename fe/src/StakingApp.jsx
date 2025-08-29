@@ -191,6 +191,18 @@ export const StakingApp = () => {
       updateWalletDisplay();
     }
   };
+
+  const goToStake = () => {
+    try {
+      setActiveTab('stake');
+      const el = document.getElementById('eth-staking');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (e) {
+      // no-op
+    }
+  };
   
   const handleWithdraw = async () => {
     if (!address) {
@@ -350,6 +362,33 @@ export const StakingApp = () => {
         </div>
       </nav>
       <div className="container">
+        {/* Hero Section */}
+        <section className="hero">
+          <div className="hero__col hero__col--media">
+            <img className="hero__logo" src="/ethstake.svg" alt="eETH" />
+          </div>
+          <div className="hero__col hero__col--content">
+            <h1 className="hero__title">
+              <span>Liquid staking with</span>
+              <strong>eETH</strong>
+            </h1>
+            <p className="hero__subtitle">Empowering and securing Ethereum since 2020</p>
+            <div className="hero__metrics">
+              <div className="hero-metric">
+                <div className="hero-metric__value">5%</div>
+                <div className="hero-metric__label">APR</div>
+              </div>
+              <div className="hero-metric">
+                <div className="hero-metric__value">$37,990,345,418</div>
+                <div className="hero-metric__label">TVL</div>
+              </div>
+              <button className="hero__cta" onClick={goToStake}>
+                <img src="/ethereum.svg" alt="stake" />
+                <span>Stake</span>
+              </button>
+            </div>
+          </div>
+        </section>
         <div className="top-banner">
           <div className="slogan-container">
             <div className="slogan"><span className="li-qeth-logo">Mine new Ether</span>Mine the Future of Finance</div>
@@ -362,15 +401,15 @@ export const StakingApp = () => {
               <div className="feature-tag">High return</div>
             </div> */}
           </div>
-          <div className="video-container">
-            <img className="promo-image spin-3d" src="/ethereum-mining.svg" alt="ETH Staking" />
-          </div>
+          {/* <div className="video-container">
+            <img className="promo-image spin-3d" src="/a.webp" alt="ETH Staking" />
+          </div> */}
         </div>
 
         <div className="top-banner">
-          <div className="video-container">
-            <img className="promo-image spin-3d" src="/ethereum-wallet.svg" alt="ETH Staking" />
-          </div>
+          {/* <div className="video-container">
+            <img className="promo-image spin-3d" src="/a.png" alt="ETH Staking" />
+          </div> */}
           <div className="slogan-container">
             <div className="slogan"><span className="li-qeth-logo">Secure hosting</span> Your Assets, Fort Knox-Secure</div>
             <div className="slogan-subtext">
@@ -385,16 +424,43 @@ export const StakingApp = () => {
         </div>
 
 
-        <div className="mobile-video-container">
-          <img className="promo-image" src="/ethereum-mining.svg" alt="ETH Staking" />
-        </div>
+        {/* <div className="mobile-video-container">
+          <img className="promo-image" src="/a.webp" alt="ETH Staking" />
+        </div> */}
         <div className="mobile-slogan-container">
           <div className="slogan"><span className="li-qeth-logo">Mine new Ether</span>Mine the Future of Finance</div>
           <div className="slogan-subtext" style={{ marginTop: '15px' }}>
             APR: %5 · Zero transaction fees · High return
           </div>
         </div>
-        <h2 className="section-title">ETH staking</h2>
+        {/* Steps: Stake / Receive / Use (独立样式) */}
+        <div className="flow-steps">
+          <div className="flow-steps__line" aria-hidden="true"></div>
+          <div className="flow-step">
+            <div className="flow-step__icon">
+              <img src="/ethstake.svg" alt="ETH" />
+            </div>
+            <div className="flow-step__title">Stake</div>
+            <div className="flow-step__subtitle">ETH</div>
+          </div>
+          <div className="flow-step">
+            <div className="flow-step__icon">
+              <img src="/ethereum.svg" alt="eETH" />
+            </div>
+            <div className="flow-step__title">Receive</div>
+            <div className="flow-step__subtitle">eETH and get rewards</div>
+          </div>
+          <div className="flow-step">
+            <div className="flow-step__icon flow-step__icon--group">
+              <img src="/download.svg" alt="DeFi" />
+            </div>
+            <div className="flow-step__title">Use</div>
+            <div className="flow-step__subtitle">
+              eETH in DeFi
+            </div>
+          </div>
+        </div>
+        <h2 id="eth-staking" className="section-title">ETH staking</h2>
         <div className="tabs">
           <button 
             className={`tab-btn ${activeTab === 'stake' ? 'active' : ''}`} 

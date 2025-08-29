@@ -1,3 +1,85 @@
+/* ========== Flow steps (独立、可调) ========== */
+.flow-steps {
+    /* 可调变量 */
+    --flow-gap: 200px;            /* 三步之间的水平间距 */
+    --flow-icon-size: 130px;      /* 圆形图标直径 */
+    /* 默认自动对齐至图标中心，可用变量覆盖 */
+    --flow-line-y: calc(var(--flow-icon-size) / 2);
+    --flow-icon-img: 75px;        /* 图标内部图片尺寸 */
+
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--flow-gap);
+    align-items: center;
+    justify-content: center;
+    margin: 80px auto 120px;
+    max-width: 1300px;
+}
+
+.flow-steps__line {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: var(--flow-line-y);
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.35), rgba(255,255,255,0.15));
+    z-index: 0;
+    pointer-events: none;
+}
+
+.flow-step {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+}
+
+.flow-step__icon {
+    width: var(--flow-icon-size);
+    height: var(--flow-icon-size);
+    border-radius: 999px;
+    background: radial-gradient(120% 120% at 30% 30%, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.35);
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.flow-step__icon img {
+    width: var(--flow-icon-img);
+    height: var(--flow-icon-img);
+}
+
+.flow-step__title {
+    font-size: 64px;
+    font-weight: 250;
+}
+
+.flow-step__subtitle {
+    font-size: 24px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 200;
+}
+
+.flow-steps__explore {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.6);
+    margin-left: 8px;
+}
+
+.flow-steps__chev { margin-left: 8px; opacity: 0.8; }
+
+@media (max-width: 960px) {
+    .flow-steps {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .flow-steps__line { display: none; }
+    .flow-step__title { font-size: 44px; }
+    .flow-step__subtitle { font-size: 18px; }
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;700&display=swap');
 
 /* 防止滚动条抖动 */
@@ -45,10 +127,73 @@ body {
 }
 
 .container {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1600px;
+    margin: 10px auto;
     padding: 20px;
     background-color: #121212;
+}
+
+/* ========== Hero Section ========== */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* gap: 240px; */
+    align-items: center;
+    padding: 40px 0 80px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero__col--media { display: grid; place-items: center; }
+
+.hero__logo {
+    width: min(700px, 40vw);
+    height: auto;
+    filter: drop-shadow(0 12px 40px rgba(0,0,0,0.45));
+}
+
+.hero__title {
+    font-weight: 200;
+    color: #ffffff;
+}
+.hero__title span { font-size: 110px; display: block; line-height: 1.1; }
+.hero__title strong { font-size: 160px; font-weight: 300; display: block; line-height: 1; }
+
+.hero__subtitle {
+    margin-top: 16px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.85);
+}
+
+.hero__metrics {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    margin-top: 32px;
+}
+
+.hero-metric__value { font-size: 28px; font-weight: 350; }
+.hero-metric__label { font-size: 28px; color: rgba(255,255,255,0.7); }
+
+.hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 30px 50px;
+    border-radius: 999px;
+    background: #0b0b0b;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: 400;
+}
+.hero__cta img { width: 24px; height: 24px; }
+
+@media (max-width: 1200px) {
+    .hero { grid-template-columns: 1fr; text-align: center; }
+    .hero__metrics { justify-content: center; flex-wrap: wrap; }
+    .hero__title span { font-size: 48px; }
+    .hero__title strong { font-size: 120px; }
 }
 
 /* 导航栏样式 */
@@ -196,7 +341,7 @@ body {
 .slogan-subtext {
     font-size: 22px;
     color: rgba(255, 255, 255, 0.9);
-    font-weight: 200;
+    font-weight: 100;
     line-height: 1.8;
     position: relative;
     padding: 20px 0;
@@ -286,18 +431,118 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 20px;
+    /* border-radius: 20px; */
     object-fit: contain;
-    padding: 65px;
+    padding: 10px;
 }
 
 /* 功能区域 */
 .section-title {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 250;
-    margin: 60px 0 30px;
+    margin: 100px 0 30px;
     color: #ffffff;
     text-align: center;
+}
+
+/* Steps section (Stake / Receive / Use) */
+.li-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 300px;
+    align-items: center;
+    justify-content: center;
+    margin: 40px auto 10px;
+    max-width: 1100px;
+    position: relative;
+}
+
+/* 横向主连接线（贯穿三步） */
+.li-steps::before {
+    content: '';
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 48px; /* 与 96px 图标的中心对齐 */
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 100%);
+}
+
+.li-step {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    position: relative;
+}
+
+/* 不再使用每步的局部连接线，避免与主线重复 */
+.li-step:not(:last-child)::after { display: none; }
+
+.li-step__icon {
+    width: 150px;
+    height: 150px;
+    border-radius: 999px;
+    background: radial-gradient(120% 120% at 30% 30%, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.12);
+    display: grid;
+    place-items: center;
+    position: relative; /* 让圆在主线上方 */
+    z-index: 1;
+    border: 1px solid #ffffff;
+}
+
+.li-step__icon img {
+    width: 80px;
+    height: 80px;
+}
+
+.li-step__icon--group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 8px;
+}
+
+.li-step__title {
+    font-size: 64px;
+    font-weight: 250;
+    letter-spacing: 0.5px;
+}
+
+.li-step__subtitle {
+    font-size: 24px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 200;
+}
+
+.li-steps__explore {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.6);
+    margin-left: 8px;
+}
+
+.li-steps__chev {
+    margin-left: 8px;
+    opacity: 0.8;
+}
+
+@media (max-width: 960px) {
+    .li-steps {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .li-steps::before { display: none; }
+    .li-step:not(:last-child)::after {
+        display: none;
+    }
+    .li-step__title {
+        font-size: 48px;
+    }
+    .li-step__subtitle {
+        font-size: 18px;
+    }
 }
 
 /* 标签页导航 */
@@ -308,7 +553,7 @@ body {
     background: var(--bg-card);
     border-radius: 12px;
     padding: 8px;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto 40px;
     border: 1px solid var(--border);
 }
@@ -320,7 +565,7 @@ body {
     border: none;
     color: var(--text-secondary);
     font-weight: 300;
-    font-size: 18px;
+    font-size: 22px;
     cursor: pointer;
     transition: all 0.3s ease;
     flex: 1;
@@ -337,7 +582,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 40px;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border-top: 2px solid rgba(255, 255, 255, 0.08);
@@ -606,7 +851,7 @@ body {
 } */
 
 .faq-question {
-    font-size: 28px;
+    font-size: 38px;
     line-height: 1.3;
     font-weight: 350;
     color: var(--text-main);
@@ -619,11 +864,11 @@ body {
 .faq-answer {
     color: var(--text-secondary);
     line-height: 1.8;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 200;
     padding-left: 0;
     opacity: 0.9;
-    max-width: 800px;
+    max-width: 1200px;
     text-align: center;
     margin: 0 auto;
 }
@@ -723,7 +968,7 @@ body {
 
     .slogan-subtext {
         font-size: 17px;
-        padding: 15px 0;
+        padding: 0px 0;
     }
 
     .faq-section {
@@ -1218,8 +1463,8 @@ input[type="number"] {
 }
 
 .li-qeth-logo {
-    font-size: 1.4em;
-    font-weight: 600;
+    font-size: 2em;
+    font-weight: 500;
     color: #ffffff;
     display: block;
 }
